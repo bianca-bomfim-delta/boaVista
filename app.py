@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import psycopg2
+import xml.etree.ElementTree as ET
 
 app = Flask(__name__)
 CORS(app)
@@ -20,7 +21,7 @@ def get_db_connection():
     )
 
 
-@app.route("/")  # mudar essa tela depois
+@app.route("/")
 def home():
     return render_template("index.html")
 
@@ -48,7 +49,6 @@ def login():
             return jsonify({"error": "Email ou senha incorretos"}), 401
 
     return render_template("login.html")
-
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -89,6 +89,79 @@ def register():
         }), 201
 
     return render_template("register.html")
+
+
+@app.route("/score")
+def score():
+    return render_template("score.html")
+
+
+@app.route("/fetch-score", methods=["POST"])
+def fetch_score():
+    """
+    Estrutura pronta para integração futura com a API externa.
+    """
+    data = request.get_json()
+    cpf = data.get("cpf")
+
+    if not cpf:
+        return jsonify({"error": "CPF é obrigatório"}), 400
+
+    # ==============================
+    # 🔧 FUTURAMENTE:
+    # response = requests.post("URL_DA_API", json={"cpf": cpf}, headers={...})
+    # xml_response = response.text
+    # ==============================
+
+    # 🔹 XML de exemplo (simulado)
+    xml_response = """
+    <root>
+        <tr_601:score_classificacao_varios_modelos xmlns:tr_601="urn:exemplo">
+            <tr_601:registro>S</tr_601:registro>
+            <tr_601:score>9</tr_601:score>
+            <tr_601:nomeScore>Renda Presum Faixa</tr_601:nomeScore>
+            <tr_601:texto>De R$ 7.001 até R$ 9.000</tr_601:texto>
+            <tr_601:descricaoNatureza>RENDA PRESUMIDA</tr_601:descricaoNatureza>
+        </tr_601:score_classificacao_varios_modelos>
+
+        <tr_940:mensagem_registro xmlns:tr_940="urn:exemplo">
+            <tr_940:registro>S</tr_940:registro>
+            <tr_940:texto>Consulta simulada de score.</tr_940:texto>
+        </tr_940:mensagem_registro>
+    </root>
+    """
+
+    root = ET.fromstring(xml_response)
+    scores = []
+    messages = []
+
+    for score in root.findall(".//{urn:exemplo}score_classificacao_varios_modelos"):
+        registro = score.find("{urn:exemplo}registro")
+        if registro is not None and registro.text == "S":
+            scores.append({
+                "score": score.findtext("{urn:exemplo}score"),
+                "nomeScore": score.findtext("{urn:exemplo}nomeScore"),
+                "texto": score.findtext("{urn:exemplo}texto"),
+                "descricaoNatureza": score.findtext("{urn:exemplo}descricaoNatureza"),
+            })
+
+    for msg in root.findall(".//{urn:exemplo}mensagem_registro"):
+        registro = msg.find("{urn:exemplo}registro")
+        if registro is not None and registro.text == "S":
+            messages.append({
+                "texto": msg.findtext("{urn:exemplo}texto")
+            })
+
+    if not scores:
+        return jsonify({"message": "Nenhum registro de score encontrado."}), 200
+
+    result = {
+        "cpf": cpf,
+        "scores": scores,
+        "messages": messages
+    }
+
+    return jsonify(result), 200
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ form.addEventListener("submit", async (e) => {
     const senha = document.getElementById("senha").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/login", {
+        const response = await fetch("/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -18,12 +18,13 @@ form.addEventListener("submit", async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            window.location.href = "consulta.html";
+            alert(data.message);
+            window.location.href = "/score";
         } else {
             alert(data.error);
         }
     } catch (error) {
         console.error("Erro:", error);
-        alert("Não foi possível conectar.");
+        alert("Não foi possível conectar ao servidor.");
     }
 });
