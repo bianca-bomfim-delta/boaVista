@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
 import xml.etree.ElementTree as ET
+#import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -23,97 +24,80 @@ def get_db_connection():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return "Teste do flask"
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["POST"])
 def login():
-    if request.method == "POST":
-        data = request.get_json() or request.form
-        email = data.get("email")
-        senha = data.get("senha")
+    data = request.get_json()
+    email = data.get("email")
+    senha = data.get("senha")
 
-        if not email or not senha:
-            return jsonify({"error": "Email e senha são obrigatórios"}), 400
+    if not email or not senha:
+        return jsonify({"error": "Email e senha são obrigatórios"}), 400
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM usuario WHERE email = %s AND senha = %s", (email, senha))
-        user = cur.fetchone()
-        cur.close()
-        conn.close()
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM usuario WHERE email = %s AND senha = %s", (email, senha))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
 
-        if user:
-            return jsonify({"message": f"Bem-vindo, {user[1]}!"}), 200
-        else:
-            return jsonify({"error": "Email ou senha incorretos"}), 401
-
-    return render_template("login.html")
+    if user:
+        return jsonify({"message": f"Bem-vindo, {user[1]}!"}), 200
+    else:
+        return jsonify({"error": "Email ou senha incorretos"}), 401
 
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["POST"])
 def register():
-    if request.method == "POST":
-        data = request.get_json() or request.form
-        nome = data.get("nome_usuario")
-        email = data.get("email")
-        senha = data.get("senha")
+    data = request.get_json()
+    nome = data.get("nome_usuario")
+    email = data.get("email")
+    senha = data.get("senha")
 
-        if not nome or not email or not senha:
-            return jsonify({"error": "Nome, email e senha são obrigatórios"}), 400
+    if not nome or not email or not senha:
+        return jsonify({"error": "Nome, email e senha são obrigatórios"}), 400
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM usuario WHERE email = %s", (email,))
-        if cur.fetchone():
-            cur.close()
-            conn.close()
-            return jsonify({"error": "Email já cadastrado"}), 409
-
-        cur.execute(
-            "INSERT INTO usuario (nome_usuario, email, senha) VALUES (%s, %s, %s) RETURNING id, nome_usuario, email",
-            (nome, email, senha)
-        )
-        new_user = cur.fetchone()
-        conn.commit()
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM usuario WHERE email = %s", (email,))
+    if cur.fetchone():
         cur.close()
         conn.close()
+        return jsonify({"error": "Email já cadastrado"}), 409
 
-        return jsonify({
-            "message": "Usuário cadastrado com sucesso",
-            "usuario": {
-                "id": new_user[0],
-                "nome_usuario": new_user[1],
-                "email": new_user[2]
-            }
-        }), 201
+    cur.execute(
+        "INSERT INTO usuario (nome_usuario, email, senha) VALUES (%s, %s, %s) RETURNING id, nome_usuario, email",
+        (nome, email, senha)
+    )
+    new_user = cur.fetchone()
+    conn.commit()
+    cur.close()
+    conn.close()
 
-    return render_template("register.html")
-
-
-@app.route("/score")
-def score():
-    return render_template("score.html")
+    return jsonify({
+        "message": "Usuário cadastrado com sucesso",
+        "usuario": {
+            "id": new_user[0],
+            "nome_usuario": new_user[1],
+            "email": new_user[2]
+        }
+    }), 201
 
 
 @app.route("/fetch-score", methods=["POST"])
 def fetch_score():
-    """
-    Estrutura pronta para integração futura com a API externa.
-    """
     data = request.get_json()
     cpf = data.get("cpf")
 
     if not cpf:
         return jsonify({"error": "CPF é obrigatório"}), 400
+    
+    # alterar essa parte quando tivermos acesso a api da boa vista 
 
-    # ==============================
-    # 🔧 FUTURAMENTE:
-    # response = requests.post("URL_DA_API", json={"cpf": cpf}, headers={...})
-    # xml_response = response.text
-    # ==============================
 
-    # 🔹 XML de exemplo (simulado)
+    # isso daqui é apenas a simulação temporaria
     xml_response = """
     <root>
         <tr_601:score_classificacao_varios_modelos xmlns:tr_601="urn:exemplo">
@@ -152,13 +136,10 @@ def fetch_score():
                 "texto": msg.findtext("{urn:exemplo}texto")
             })
 
-    if not scores:
-        return jsonify({"message": "Nenhum registro de score encontrado."}), 200
-
     result = {
         "cpf": cpf,
         "scores": scores,
-        "messages": messages
+        "messages": messages or [{"texto": "Nenhuma mensagem disponível."}]
     }
 
     return jsonify(result), 200
