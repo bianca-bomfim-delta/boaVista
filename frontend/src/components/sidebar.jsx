@@ -22,6 +22,7 @@ export default function Sidebar() {
       </div>
 
       <Link to="/register" className="menu-link">Cadastrar Usuário</Link>
+      <Link to="/adminPanel" className="menu-link">Editar Senha</Link>
       <Link to="/adminPanel" className="menu-link">Editar Perfil</Link>
 
       <button className="logout-btn" onClick={() => window.location.href = "/login"}>
