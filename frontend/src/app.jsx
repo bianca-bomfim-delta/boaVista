@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./components/login";
 import Register from "./components/register";
@@ -19,11 +19,13 @@ const App = () => {
     <Router>
       <Routes>
         {/* login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/*  Tela de login */}
         <Route path="/login" element={<Login />} />
 
-        {/* rotas internas com layout */}
+        {/*  Rotas internas */}
         <Route element={<Layout />}>
-          <Route path="/" element={<ScoreCpf />} />
           <Route path="/scoreCpf" element={<ScoreCpf />} />
           <Route path="/scoreCnpj" element={<ScoreCnpj />} />
           <Route path="/register" element={<Register />} />

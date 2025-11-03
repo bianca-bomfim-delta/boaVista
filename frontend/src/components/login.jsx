@@ -21,7 +21,7 @@ const Login = () => {
 
       if (response.ok) {
         alert(data.message);
-        navigate("/score");
+        navigate("/scoreCpf");
       } else {
         alert(data.error);
       }
