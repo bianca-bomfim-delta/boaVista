@@ -144,6 +144,93 @@ def fetch_score():
 
     return jsonify(result), 200
 
+@app.route("/fetch-score-cnpj", methods=["POST"])
+def fetch_score_cnpj():
+    data = request.get_json()
+    cnpj = data.get("cnpj")
+
+    if not cnpj:
+        return jsonify({"error": "CNPJ é obrigatório"}), 400
+
+    # Simulação de resposta XML para CNPJ
+    xml_response = """
+    <root>
+        <tr_602:score_classificacao_varios_modelos xmlns:tr_602="urn:exemplo">
+            <tr_602:registro>S</tr_602:registro>
+            <tr_602:score>8</tr_602:score>
+            <tr_602:nomeScore>Risco Empresarial</tr_602:nomeScore>
+            <tr_602:texto>Baixo risco</tr_602:texto>
+            <tr_602:descricaoNatureza>EMPRESARIAL</tr_602:descricaoNatureza>
+        </tr_602:score_classificacao_varios_modelos>
+
+        <tr_941:mensagem_registro xmlns:tr_941="urn:exemplo">
+            <tr_941:registro>S</tr_941:registro>
+            <tr_941:texto>Consulta simulada de score para CNPJ.</tr_941:texto>
+        </tr_941:mensagem_registro>
+    </root>
+    """
+
+    root = ET.fromstring(xml_response)
+    scores = []
+    messages = []
+
+    for score in root.findall(".//{urn:exemplo}score_classificacao_varios_modelos"):
+        registro = score.find("{urn:exemplo}registro")
+        if registro is not None and registro.text == "S":
+            scores.append({
+                "score": score.findtext("{urn:exemplo}score"),
+                "nomeScore": score.findtext("{urn:exemplo}nomeScore"),
+                "texto": score.findtext("{urn:exemplo}texto"),
+                "descricaoNatureza": score.findtext("{urn:exemplo}descricaoNatureza"),
+            })
+
+    for msg in root.findall(".//{urn:exemplo}mensagem_registro"):
+        registro = msg.find("{urn:exemplo}registro")
+        if registro is not None and registro.text == "S":
+            messages.append({
+                "texto": msg.findtext("{urn:exemplo}texto")
+            })
+
+    result = {
+        "cnpj": cnpj,
+        "scores": scores,
+        "messages": messages or [{"texto": "Nenhuma mensagem disponível."}]
+    }
+
+    return jsonify(result), 200
+
+
+@app.route("/users", methods=["GET"])
+def get_users():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, nome_usuario, email FROM usuario")
+    users = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    users_list = [{"id": u[0], "nome_usuario": u[1], "email": u[2]} for u in users]
+    return jsonify(users_list), 200
+
+
+@app.route("/update-password", methods=["POST"])
+def update_password():
+    data = request.get_json()
+    user_id = data.get("id")
+    new_password = data.get("senha")
+
+    if not user_id or not new_password:
+        return jsonify({"error": "ID do usuário e nova senha são obrigatórios"}), 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE usuario SET senha = %s WHERE id = %s", (new_password, user_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return jsonify({"message": "Senha atualizada com sucesso"}), 200
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

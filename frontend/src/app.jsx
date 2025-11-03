@@ -2,20 +2,34 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Login from "./components/login";
 import Register from "./components/register";
-import Score from "./components/score";
+import ScoreCpf from "./components/scoreCpf";
+import ScoreCnpj from "./components/scoreCnpj";
+import EditProfile from "./components/editProfile";
+import AdminPanel from "./components/adminPanel";
+import Layout from "./components/layout";
 
 import "./styles/style.css";
 import "./styles/authentication.css";
 import "./styles/score.css";
+import "./styles/sidebar.css";
+import "./styles/editProfile.css";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* login */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/score" element={<Score />} />
+
+        {/* rotas internas com layout */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<ScoreCpf />} />
+          <Route path="/scoreCpf" element={<ScoreCpf />} />
+          <Route path="/scoreCnpj" element={<ScoreCnpj />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/editProfile" element={<EditProfile />} />
+          <Route path="/adminPanel" element={<AdminPanel />} />
+        </Route>
       </Routes>
     </Router>
   );

@@ -1,4 +1,3 @@
-{/* tela base que já foi implementada no scoreCpf e scoreCnpj*/}
 import React, { useState } from "react";
 import "../styles/score.css";
 
@@ -45,7 +44,7 @@ const Score = () => {
 
   return (
     <div className="score-container">
-      <h1>Consulta de Score</h1>
+      <h1>Consulta de Score CPF</h1>
 
       <form onSubmit={handleSubmit}>
         <input
