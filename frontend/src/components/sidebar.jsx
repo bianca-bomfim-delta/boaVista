@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  User,
+  LogOut,
+  Settings,
+  FileText,
+  ChevronDown,
+  ChevronUp,
+  ClipboardList,
+  Users,
+} from "lucide-react";
 import "../styles/sidebar.css";
 
 export default function Sidebar() {
@@ -21,9 +31,8 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar">
+      <h2>Menu</h2>
 
-         <h2>Menu</h2>
-         
       {user && (
         <div className="user-info">
           <img
@@ -41,37 +50,49 @@ export default function Sidebar() {
       )}
 
       <div className="menu-item">
-        <button
+        <button 
           onClick={() => setOpenServicos(!openServicos)}
           className="submenu-toggle"
         >
-          Serviços {openServicos ? "▲" : "▼"}
+          <ClipboardList size={18} style={{ marginRight: "8px" }} />
+          Serviços {openServicos ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
 
         {openServicos && (
           <div className="submenu">
-            <Link to="/scoreCpf">Consulta por CPF</Link>
-            <Link to="/scoreCnpj">Consulta por CNPJ</Link>
+            <Link to="/scoreCpf" className="submenu-link">
+              <FileText size={16} style={{ marginRight: "6px" }} />
+              Consulta por CPF
+            </Link>
+            <Link to="/scoreCnpj" className="submenu-link">
+              <FileText size={16} style={{ marginRight: "6px" }} />
+              Consulta por CNPJ
+            </Link>
           </div>
         )}
       </div>
 
       <Link to="/editProfile" className="menu-link">
+        <User size={18} style={{ marginRight: "8px" }} />
         Editar Perfil
       </Link>
 
       {user?.id === 1 && (
         <>
           <Link to="/register" className="menu-link">
+            <Users size={18} style={{ marginRight: "8px" }} />
             Cadastrar Usuário
           </Link>
+
           <Link to="/adminPanel" className="menu-link">
+            <Settings size={18} style={{ marginRight: "8px" }} />
             Alterar Senhas
           </Link>
         </>
       )}
 
       <button className="logout-btn" onClick={handleLogout}>
+        <LogOut size={18} style={{ marginRight: "8px" }} />
         Sair
       </button>
     </div>
