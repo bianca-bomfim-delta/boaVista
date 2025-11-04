@@ -20,9 +20,10 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert(data.message);
+        localStorage.setItem("user", JSON.stringify(data));
         navigate("/scoreCpf");
-      } else {
+      }
+      else {
         alert(data.error);
       }
     } catch (error) {

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
 import xml.etree.ElementTree as ET
+import os
 #import requests
 
 app = Flask(__name__)
@@ -22,6 +23,13 @@ def get_db_connection():
     )
 
 
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
 @app.route("/")
 def home():
     return "Teste do flask"
@@ -38,13 +46,27 @@ def login():
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM usuario WHERE email = %s AND senha = %s", (email, senha))
+    cur.execute("SELECT id, nome_usuario, email, foto FROM usuario WHERE email = %s AND senha = %s", (email, senha))
     user = cur.fetchone()
     cur.close()
     conn.close()
 
     if user:
-        return jsonify({"message": f"Bem-vindo, {user[1]}!"}), 200
+        user_id = user[0]
+        nome = user[1]
+        email = user[2]
+        foto = user[3]
+
+        is_admin = user_id == 1
+
+        return jsonify({
+            "id": user_id,
+            "nome_usuario": nome,
+            "email": email,
+            "is_admin": is_admin,
+             "foto": foto,
+            "message": f"Bem-vindo, {nome}!"
+        }), 200
     else:
         return jsonify({"error": "Email ou senha incorretos"}), 401
 
@@ -230,6 +252,52 @@ def update_password():
     conn.close()
 
     return jsonify({"message": "Senha atualizada com sucesso"}), 200
+
+@app.route("/update-profile", methods=["POST"])
+def update_profile():
+    user_id = request.form.get("id")
+    nome = request.form.get("nome_usuario")
+    email = request.form.get("email")
+    senha = request.form.get("senha")
+    foto = request.files.get("foto")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+
+    foto_nome = None
+    if foto:
+        foto_nome = f"user_{user_id}.jpg"
+        upload_path = os.path.join("uploads", foto_nome)
+        foto.save(upload_path)
+
+    cur.execute("""
+        UPDATE usuario
+        SET nome_usuario = %s, email = %s, senha = %s, foto = COALESCE(%s, foto)
+        WHERE id = %s
+    """, (nome, email, senha, foto_nome, user_id))
+
+    conn.commit()
+    cur.execute("SELECT id, nome_usuario, email, foto FROM usuario WHERE id = %s", (user_id,))
+    updated_user = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    user_data = {
+        "id": updated_user[0],
+        "nome_usuario": updated_user[1],
+        "email": updated_user[2],
+        "foto": updated_user[3],
+    }
+    print("USER_DATA RETORNO:", user_data)
+
+    return jsonify({"message": "Perfil atualizado com sucesso", "user": user_data}), 200
+
+from flask import send_from_directory
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
 if __name__ == "__main__":

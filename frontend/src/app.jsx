@@ -13,6 +13,7 @@ import "./styles/authentication.css";
 import "./styles/score.css";
 import "./styles/sidebar.css";
 import "./styles/editProfile.css";
+import "./styles/adminPanel.css";
 
 const App = () => {
   return (

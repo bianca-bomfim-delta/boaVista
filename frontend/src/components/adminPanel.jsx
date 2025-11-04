@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/editProfile.css"; // pode manter o CSS atual ou criar um novo se quiser
+import "../styles/adminPanel.css";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
