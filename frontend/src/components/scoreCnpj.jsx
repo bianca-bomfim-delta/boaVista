@@ -58,7 +58,7 @@ const Score = () => {
                     maxLength={14}
                     required
                 />
-                <button type="submit">Consultar</button>
+                <button type="submit" className="button-score">Consultar</button>
             </form>
 
             {resultado && (

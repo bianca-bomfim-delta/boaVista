@@ -31,31 +31,40 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar">
-      <h2>Menu</h2>
+      <h2>Delta</h2>
 
       {user && (
         <div className="user-info">
-          <img
-            src={
-              user.foto
-                ? `http://127.0.0.1:5000/uploads/${user.foto}?t=${Date.now()}`
-                : "/default-avatar.png"
-            }
-            alt="Foto do usuário"
-            className="user-avatar"
-          />
+          <div className="user-avatar-wrapper">
+            <img
+              src={
+                user.foto
+                  ? `http://127.0.0.1:5000/uploads/${user.foto}?t=${Date.now()}`
+                  : "/default-avatar.png"
+              }
+              alt="Foto do usuário"
+              className="user-avatar"
+            />
+            <img
+              src="/logo.png"
+              alt="Logo da empresa"
+              className="user-logo-bg"
+            />
+          </div>
+
           <h3 className="user-name">{user.nome_usuario}</h3>
           <p className="user-email">{user.email}</p>
         </div>
       )}
 
       <div className="menu-item">
-        <button 
+        <button
           onClick={() => setOpenServicos(!openServicos)}
           className="submenu-toggle"
         >
           <ClipboardList size={18} style={{ marginRight: "8px" }} />
-          Serviços {openServicos ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          Serviços{" "}
+          {openServicos ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
 
         {openServicos && (

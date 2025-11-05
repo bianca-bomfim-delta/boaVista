@@ -9,7 +9,7 @@
 
 .edit-profile-container h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin: 0 auto;
 }
 
 .profile-form {
@@ -29,7 +29,8 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0.2rem;
   border: 2px solid #ccc;
 }
 
@@ -45,4 +46,8 @@
 
 .save-btn:hover {
   background-color: #c7924c;
+}
+
+label {
+  margin-bottom: -2px;
 }

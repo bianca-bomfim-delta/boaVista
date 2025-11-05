@@ -33,33 +33,45 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">E-mail</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="Digite seu e-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <label htmlFor="senha">Senha</label>
-        <input
-          type="password"
-          id="senha"
-          placeholder="Digite sua senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          required
-        />
-
-        <button type="submit">Entrar</button>
-      </form>
+  <div className="login-container">
+    <div className="login-left">
+      <img src="/logo.png" alt="Logo" />
+      <h1>Delta Global Bank</h1>
     </div>
-  );
+
+    <div className="login-right">
+      <div className="login-box">
+        <h2>Bem-vindo</h2>
+        <p>Entre com suas credenciais para acessar a plataforma</p>
+
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="seu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <label htmlFor="senha">Senha</label>
+          <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
+
+          <button type="submit">Entrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+);
+
 };
 
 export default Login;

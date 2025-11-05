@@ -14,27 +14,27 @@ import "./styles/score.css";
 import "./styles/sidebar.css";
 import "./styles/editProfile.css";
 import "./styles/adminPanel.css";
+import "./styles/register.css";
 
 const App = () => {
   return (
     <Router>
-      <Routes>
-        {/* login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+  <Routes>
+    {/* login */}
+    <Route path="/" element={<Navigate to="/login" replace />} />
+    <Route path="/login" element={<Login />} />
 
-        {/*  Tela de login */}
-        <Route path="/login" element={<Login />} />
+    {/* Rotas internas que usam sidebar/layout */}
+    <Route element={<Layout />}>
+      <Route path="/scoreCpf" element={<ScoreCpf />} />
+      <Route path="/scoreCnpj" element={<ScoreCnpj />} />
+      <Route path="/editProfile" element={<EditProfile />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/adminPanel" element={<AdminPanel />} />
+    </Route>
+  </Routes>
+</Router>
 
-        {/*  Rotas internas */}
-        <Route element={<Layout />}>
-          <Route path="/scoreCpf" element={<ScoreCpf />} />
-          <Route path="/scoreCnpj" element={<ScoreCnpj />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/editProfile" element={<EditProfile />} />
-          <Route path="/adminPanel" element={<AdminPanel />} />
-        </Route>
-      </Routes>
-    </Router>
   );
 };
 
