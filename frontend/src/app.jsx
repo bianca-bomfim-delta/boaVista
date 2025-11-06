@@ -24,7 +24,7 @@ const App = () => {
     <Route path="/" element={<Navigate to="/login" replace />} />
     <Route path="/login" element={<Login />} />
 
-    {/* Rotas internas que usam sidebar/layout */}
+    {/* Rotas internas*/}
     <Route element={<Layout />}>
       <Route path="/scoreCpf" element={<ScoreCpf />} />
       <Route path="/scoreCnpj" element={<ScoreCnpj />} />

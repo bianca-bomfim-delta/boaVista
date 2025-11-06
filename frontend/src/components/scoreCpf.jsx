@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/score.css";
 
 const Score = () => {
@@ -42,11 +43,50 @@ const Score = () => {
     }
   };
 
-  return (
-    <div className="score-container">
-      <h1>Consulta de Score CPF</h1>
+  const containerVariants = {
+    hidden: { opacity: 0, y: 25 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
 
-      <form onSubmit={handleSubmit}>
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      transition: { duration: 0.3 },
+    },
+  };
+
+  return (
+    <motion.div
+      className="score-container"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        Consulta de Score CPF
+      </motion.h1>
+
+      <motion.form
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <input
           type="text"
           id="cpf"
@@ -56,21 +96,37 @@ const Score = () => {
           maxLength={14}
           required
         />
-        <button type="submit">Consultar</button>
-      </form>
-
-      {resultado && (
-        <div className="card">
-          <h2>Resultado da Consulta</h2>
-          <p><strong>CPF:</strong> {resultado.cpf}</p>
-          <p><strong>Score:</strong> {resultado.scores?.[0]?.score || "—"}</p>
-          <p><strong>Nome do Score:</strong> {resultado.scores?.[0]?.nomeScore || "—"}</p>
-          <p><strong>Faixa:</strong> {resultado.scores?.[0]?.texto || "—"}</p>
-          <p><strong>Natureza:</strong> {resultado.scores?.[0]?.descricaoNatureza || "—"}</p>
-          <p><strong>Mensagem:</strong> {resultado.messages?.[0]?.texto || "—"}</p>
-        </div>
-      )}
-    </div>
+        <motion.button
+          type="submit"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          Consultar
+        </motion.button>
+      </motion.form>
+      
+      <AnimatePresence>
+        {resultado && (
+          <motion.div
+            key="resultado-card"
+            className="card"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <h2>Resultado da Consulta</h2>
+            <p><strong>CPF:</strong> {resultado.cpf}</p>
+            <p><strong>Score:</strong> {resultado.scores?.[0]?.score || "—"}</p>
+            <p><strong>Nome do Score:</strong> {resultado.scores?.[0]?.nomeScore || "—"}</p>
+            <p><strong>Faixa:</strong> {resultado.scores?.[0]?.texto || "—"}</p>
+            <p><strong>Natureza:</strong> {resultado.scores?.[0]?.descricaoNatureza || "—"}</p>
+            <p><strong>Mensagem:</strong> {resultado.messages?.[0]?.texto || "—"}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

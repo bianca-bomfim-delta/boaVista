@@ -10,6 +10,7 @@ import {
   ClipboardList,
   Users,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import "../styles/sidebar.css";
 
 export default function Sidebar() {
@@ -29,14 +30,39 @@ export default function Sidebar() {
     navigate("/login");
   };
 
+  const sidebarVariants = {
+    hidden: { opacity: 0, x: -40 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, delay: 0.2 + i * 0.1 },
+    }),
+  };
+
   return (
-    <div className="sidebar">
-      <h2>Delta</h2>
+    <motion.div
+      className="sidebar"
+      variants={sidebarVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h2 variants={itemVariants} custom={0}>
+        Delta
+      </motion.h2>
 
       {user && (
-        <div className="user-info">
+        <motion.div
+          className="user-info"
+          variants={itemVariants}
+          custom={1}
+        >
           <div className="user-avatar-wrapper">
-            <img
+            <motion.img
               src={
                 user.foto
                   ? `http://127.0.0.1:5000/uploads/${user.foto}?t=${Date.now()}`
@@ -44,20 +70,39 @@ export default function Sidebar() {
               }
               alt="Foto do usuário"
               className="user-avatar"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             />
-            <img
+            <motion.img
               src="/logo.png"
               alt="Logo da empresa"
               className="user-logo-bg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             />
           </div>
 
-          <h3 className="user-name">{user.nome_usuario}</h3>
-          <p className="user-email">{user.email}</p>
-        </div>
+          <motion.h3
+            className="user-name"
+            variants={itemVariants}
+            custom={2}
+          >
+            {user.nome_usuario}
+          </motion.h3>
+
+          <motion.p
+            className="user-email"
+            variants={itemVariants}
+            custom={3}
+          >
+            {user.email}
+          </motion.p>
+        </motion.div>
       )}
 
-      <div className="menu-item">
+      <motion.div className="menu-item" variants={itemVariants} custom={4}>
         <button
           onClick={() => setOpenServicos(!openServicos)}
           className="submenu-toggle"
@@ -68,7 +113,12 @@ export default function Sidebar() {
         </button>
 
         {openServicos && (
-          <div className="submenu">
+          <motion.div
+            className="submenu"
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <Link to="/scoreCpf" className="submenu-link">
               <FileText size={16} style={{ marginRight: "6px" }} />
               Consulta por CPF
@@ -77,33 +127,44 @@ export default function Sidebar() {
               <FileText size={16} style={{ marginRight: "6px" }} />
               Consulta por CNPJ
             </Link>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
-      <Link to="/editProfile" className="menu-link">
-        <User size={18} style={{ marginRight: "8px" }} />
-        Editar Perfil
-      </Link>
+      <motion.div variants={itemVariants} custom={5}>
+        <Link to="/editProfile" className="menu-link">
+          <User size={18} style={{ marginRight: "8px" }} />
+          Editar Perfil
+        </Link>
+      </motion.div>
 
       {user?.id === 1 && (
         <>
-          <Link to="/register" className="menu-link">
-            <Users size={18} style={{ marginRight: "8px" }} />
-            Cadastrar Usuário
-          </Link>
+          <motion.div variants={itemVariants} custom={6}>
+            <Link to="/register" className="menu-link">
+              <Users size={18} style={{ marginRight: "8px" }} />
+              Cadastrar Usuário
+            </Link>
+          </motion.div>
 
-          <Link to="/adminPanel" className="menu-link">
-            <Settings size={18} style={{ marginRight: "8px" }} />
-            Alterar Senhas
-          </Link>
+          <motion.div variants={itemVariants} custom={7}>
+            <Link to="/adminPanel" className="menu-link">
+              <Settings size={18} style={{ marginRight: "8px" }} />
+              Alterar Senhas
+            </Link>
+          </motion.div>
         </>
       )}
 
-      <button className="logout-btn" onClick={handleLogout}>
+      <motion.button
+        className="logout-btn"
+        onClick={handleLogout}
+        variants={itemVariants}
+        custom={8}
+      >
         <LogOut size={18} style={{ marginRight: "8px" }} />
         Sair
-      </button>
-    </div>
+      </motion.button>
+    </motion.div>
   );
 }

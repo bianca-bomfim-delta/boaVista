@@ -83,15 +83,22 @@ def register():
 
     conn = get_db_connection()
     cur = conn.cursor()
+
     cur.execute("SELECT * FROM usuario WHERE email = %s", (email,))
     if cur.fetchone():
         cur.close()
         conn.close()
         return jsonify({"error": "Email já cadastrado"}), 409
 
+    imagem_padrao = "default-avatar.jpeg"
+
     cur.execute(
-        "INSERT INTO usuario (nome_usuario, email, senha) VALUES (%s, %s, %s) RETURNING id, nome_usuario, email",
-        (nome, email, senha)
+        """
+        INSERT INTO usuario (nome_usuario, email, senha, foto)
+        VALUES (%s, %s, %s, %s)
+        RETURNING id, nome_usuario, email, foto
+        """,
+        (nome, email, senha, imagem_padrao)
     )
     new_user = cur.fetchone()
     conn.commit()
@@ -103,9 +110,11 @@ def register():
         "usuario": {
             "id": new_user[0],
             "nome_usuario": new_user[1],
-            "email": new_user[2]
+            "email": new_user[2],
+            "foto": new_user[3]
         }
     }), 201
+
 
 
 @app.route("/fetch-score", methods=["POST"])

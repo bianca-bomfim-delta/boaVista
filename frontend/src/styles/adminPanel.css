@@ -28,16 +28,14 @@
   overflow: hidden;
 }
 
-/* ===== TABELA ===== */
-
 .table-wrapper {
   width: 100%;
-  overflow-x: auto; /* rolagem horizontal em telas pequenas */
+  overflow-x: auto; 
 }
 
 table {
   width: 100%;
-  min-width: 600px; /* evita quebrar colunas */
+  min-width: 600px;
   border-collapse: collapse;
   margin-bottom: 15px;
   border-radius: 8px;
@@ -68,8 +66,6 @@ tr:nth-child(even) td {
   background-color: #f9f9fb;
 }
 
-/* ===== FORMULÁRIOS ===== */
-
 input,
 select {
   width: 100%;
@@ -90,8 +86,6 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(173, 123, 58, 0.25);
 }
 
-/* ===== BOTÃO ===== */
-
 button {
   padding: 12px 28px;
   margin-top: 10px;
@@ -111,8 +105,6 @@ button:hover {
   box-shadow: 0 3px 6px rgba(173, 123, 58, 0.25);
 }
 
-/* ===== SEÇÕES ===== */
-
 .section {
   margin-bottom: 20px;
 }
@@ -125,16 +117,12 @@ button:hover {
   padding-left: 10px;
 }
 
-/* ===== CONTAINER GERAL ===== */
-
 .admin-panel-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-
-/* ===== RESPONSIVIDADE ===== */
 
 @media (max-width: 992px) {
   .edit-profile-container {
