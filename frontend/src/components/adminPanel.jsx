@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/adminPanel.css";
+import logo from "../images/logo.png";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("info");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/users")
       .then((res) => res.json())
       .then((data) => setUsers(data))
-      .catch((err) => console.error("Erro ao carregar usuários:", err));
+      .catch((err) => {
+        console.error("Erro ao carregar usuários:", err);
+        showAlert("Erro ao carregar usuários.", "error");
+      });
   }, []);
+
+  const showAlert = (message, type = "info") => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+  };
 
   const handlePasswordChange = (id, value) => {
     setUsers(
@@ -22,7 +35,7 @@ const AdminPanel = () => {
 
   const handleSave = async (id, senha) => {
     if (!senha || senha.trim().length < 8) {
-      alert("A senha deve ter pelo menos 8 caracteres.");
+      showAlert("Use ao menos 8 caracteres.", "error");
       return;
     }
 
@@ -35,18 +48,18 @@ const AdminPanel = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert(data.message);
+        showAlert(data.message || "Senha atualizada com sucesso!", "success");
         setUsers(
           users.map((user) =>
             user.id === id ? { ...user, senha: "" } : user
           )
         );
       } else {
-        alert(data.error);
+        showAlert(data.error || "Erro ao atualizar senha.", "error");
       }
     } catch (error) {
       console.error("Erro:", error);
-      alert("Não foi possível atualizar a senha.");
+      showAlert("Não foi possível conectar ao servidor.", "error");
     }
   };
 
@@ -131,6 +144,42 @@ const AdminPanel = () => {
           ))}
         </tbody>
       </motion.table>
+
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className={`modal-content ${modalType}`}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <img src={logo} alt="Logo" className="modal-logo" />
+
+              <h3 className="modal-title">
+                {modalType === "success" ? "Sucesso!" : "Atenção"}
+              </h3>
+
+              <p className="modal-text">{modalMessage}</p>
+
+              <motion.button
+                className="modal-close"
+                onClick={() => setShowModal(false)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                OK
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

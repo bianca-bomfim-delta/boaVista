@@ -3,7 +3,6 @@ from flask_cors import CORS
 import psycopg2
 import xml.etree.ElementTree as ET
 import os
-#import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -68,7 +67,7 @@ def login():
             "message": f"Bem-vindo, {nome}!"
         }), 200
     else:
-        return jsonify({"error": "Email ou senha incorretos"}), 401
+        return jsonify({"error": "Credenciais inválidas"}), 401
 
 
 @app.route("/register", methods=["POST"])
@@ -270,27 +269,45 @@ def update_profile():
     senha = request.form.get("senha")
     foto = request.files.get("foto")
 
+    if not user_id:
+        return jsonify({"error": "ID do usuário é obrigatório"}), 400
+
     conn = get_db_connection()
     cur = conn.cursor()
+    
+    update_query = "UPDATE usuario SET nome_usuario = %s, email = %s"
+    params = [nome, email]
 
+    if senha: 
+        update_query += ", senha = %s"
+        params.append(senha)
 
     foto_nome = None
     if foto:
-        foto_nome = f"user_{user_id}.jpg"
+        from datetime import datetime
+        from werkzeug.utils import secure_filename
+
+        ext = os.path.splitext(secure_filename(foto.filename))[1]
+        foto_nome = f"user_{user_id}_{int(datetime.now().timestamp())}{ext}"
         upload_path = os.path.join("uploads", foto_nome)
         foto.save(upload_path)
 
-    cur.execute("""
-        UPDATE usuario
-        SET nome_usuario = %s, email = %s, senha = %s, foto = COALESCE(%s, foto)
-        WHERE id = %s
-    """, (nome, email, senha, foto_nome, user_id))
+        update_query += ", foto = %s"
+        params.append(foto_nome)
 
+    update_query += " WHERE id = %s"
+    params.append(user_id)
+
+    cur.execute(update_query, params)
     conn.commit()
+
     cur.execute("SELECT id, nome_usuario, email, foto FROM usuario WHERE id = %s", (user_id,))
     updated_user = cur.fetchone()
     cur.close()
     conn.close()
+
+    if not updated_user:
+        return jsonify({"error": "Usuário não encontrado"}), 404
 
     user_data = {
         "id": updated_user[0],
@@ -298,7 +315,9 @@ def update_profile():
         "email": updated_user[2],
         "foto": updated_user[3],
     }
+
     print("USER_DATA RETORNO:", user_data)
+
 
     return jsonify({"message": "Perfil atualizado com sucesso", "user": user_data}), 200
 

@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/authentication.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [modal, setModal] = useState({ show: false, message: "", type: "" });
   const navigate = useNavigate();
+
+  const showModal = (message, type = "info") => {
+    setModal({ show: true, message, type });
+    setTimeout(() => {
+      setModal({ show: false, message: "", type: "" });
+    }, 2500);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,13 +30,15 @@ const Login = () => {
 
       if (response.ok) {
         localStorage.setItem("user", JSON.stringify(data));
-        navigate("/scoreCpf");
+
+      navigate("/scoreCpf");
+
       } else {
-        alert(data.error);
+        showModal(data.error || "Credenciais inválidas.", "error");
       }
     } catch (error) {
       console.error("Erro:", error);
-      alert("Não foi possível conectar ao servidor.");
+      showModal("Servidor indisponível", "info");
     }
   };
 
@@ -75,6 +85,21 @@ const Login = () => {
         initial="hidden"
         animate="visible"
       >
+        <AnimatePresence>
+    {modal.show && (
+      <motion.div
+        key="modal-alert"
+        className={`modal-alert ${modal.type}`}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.3 }}
+      >
+        {modal.message}
+      </motion.div>
+    )}
+  </AnimatePresence>
+
         <motion.div className="login-box" variants={formVariants}>
           <motion.h2 variants={childVariants}>Bem-vindo</motion.h2>
           <motion.p variants={childVariants}>

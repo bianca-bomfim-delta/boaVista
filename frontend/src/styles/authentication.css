@@ -123,6 +123,31 @@ html, body {
   background-color: #8b622f;
 }
 
+.modal-alert {
+  position: absolute;
+  top: 30px;
+  left: 36%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  max-width: 360px;
+  text-align: center;
+}
+
+.modal-alert.error {
+  background: linear-gradient(135deg, #102547bd, #0B1C3A);
+}
+
+.modal-alert.info {
+  background: linear-gradient(135deg, #836337b4, #946b39);
+}
+
+
 @media (max-width: 900px) {
   html, body {
     overflow: auto; 

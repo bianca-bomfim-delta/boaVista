@@ -2,7 +2,7 @@
   background: #ffffff;
   padding: 40px 50px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(8, 21, 53, 0.08);
+  box-shadow: 0 4px 20px #08153514;
   max-width: 600px;
   margin: 50px auto;
   width: 100%;
@@ -11,7 +11,7 @@
 }
 
 .user-edit-container:hover {
-  box-shadow: 0 6px 25px rgba(8, 21, 53, 0.12);
+  box-shadow: 0 6px 25px #0815351f;
 }
 
 .user-edit-title {
@@ -75,7 +75,7 @@
 .user-input:focus {
   border-color: #AD7B3A;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(173, 123, 58, 0.25);
+  box-shadow: 0 0 0 2px #ad7b3a40;
 }
 
 .user-save-btn {
@@ -93,7 +93,35 @@
 .user-save-btn:hover {
   background-color: #c7924c;
   transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(173, 123, 58, 0.25);
+  box-shadow: 0 3px 6px #ad7b3a40;
+}
+
+.modal-alert {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  max-width: 360px;
+  text-align: center;
+}
+
+.modal-alert.success {
+  background: linear-gradient(135deg, #102547bd, #0B1C3A);
+}
+
+.modal-alert.error {
+  background: linear-gradient(135deg, #836337b4, #946b39);
+}
+
+.modal-alert.info {
+  background: linear-gradient(135deg, #836337b4, #946b39);
 }
 
 @media (max-width: 768px) {

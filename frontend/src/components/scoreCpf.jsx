@@ -43,6 +43,11 @@ const Score = () => {
     }
   };
 
+  const novaConsulta = () => {
+    setResultado(null);
+    setCpf("");
+  };
+
   const containerVariants = {
     hidden: { opacity: 0, y: 25 },
     visible: {
@@ -81,31 +86,38 @@ const Score = () => {
         Consulta de Score CPF
       </motion.h1>
 
-      <motion.form
-        onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <input
-          type="text"
-          id="cpf"
-          placeholder="Digite o CPF"
-          value={cpf}
-          onChange={(e) => setCpf(formatCpf(e.target.value))}
-          maxLength={14}
-          required
-        />
-        <motion.button
-          type="submit"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.2 }}
-        >
-          Consultar
-        </motion.button>
-      </motion.form>
-      
+      <AnimatePresence>
+        {!resultado && (
+          <motion.form
+            key="form"
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+          >
+            <input
+              type="text"
+              id="cpf"
+              placeholder="Digite o CPF"
+              value={cpf}
+              onChange={(e) => setCpf(formatCpf(e.target.value))}
+              maxLength={14}
+              required
+            />
+            <motion.button
+              type="submit"
+              className="button-score"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              Consultar
+            </motion.button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {resultado && (
           <motion.div
@@ -123,6 +135,17 @@ const Score = () => {
             <p><strong>Faixa:</strong> {resultado.scores?.[0]?.texto || "—"}</p>
             <p><strong>Natureza:</strong> {resultado.scores?.[0]?.descricaoNatureza || "—"}</p>
             <p><strong>Mensagem:</strong> {resultado.messages?.[0]?.texto || "—"}</p>
+
+            <motion.button
+              onClick={novaConsulta}
+              className="button-score"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              style={{ marginTop: "20px" }}
+            >
+              Nova Consulta
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

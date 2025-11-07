@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/register.css";
+import logo from "../images/logo.png";
 
 const Register = () => {
   const [nome_usuario, setNomeUsuario] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("info");
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!senha || senha.trim().length < 8) {
+      setModalMessage("Use ao menos 8 caracteres.");
+      setModalType("error");
+      setShowModal(true);
+      return;
+    }
 
     try {
       const response = await fetch("http://127.0.0.1:5000/register", {
@@ -22,122 +33,71 @@ const Register = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Usuário cadastrado com sucesso!");
-        navigate("/login");
+        setModalMessage("Usuário cadastrado com sucesso!");
+        setModalType("success");
+        setShowModal(true);
+
+        setTimeout(() => {
+          setShowModal(false);
+          navigate("/login");
+        }, 2500);
       } else {
-        alert(data.error || "Erro ao cadastrar usuário.");
+        setModalMessage(data.error || "Erro ao cadastrar usuário.");
+        setModalType("error");
+        setShowModal(true);
       }
     } catch (error) {
       console.error("Erro:", error);
-      alert("Não foi possível conectar ao servidor.");
+      setModalMessage("Não foi possível conectar ao servidor.");
+      setModalType("error");
+      setShowModal(true);
     }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 25 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
-  const formVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, delay: 0.2, ease: "easeOut" },
-    },
   };
 
   return (
     <motion.div
       className="register-wrapper"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+      initial={{ opacity: 0, y: 25 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.div
         className="register-box"
-        variants={formVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <motion.h2
-          className="register-title"
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Novo Usuário
-        </motion.h2>
+        <h2 className="register-title">Novo Usuário</h2>
 
         <form className="register-form" onSubmit={handleSubmit}>
-          <motion.label
-            className="register-label"
-            htmlFor="nome_usuario"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Nome
-          </motion.label>
-          <motion.input
+          <label className="register-label">Nome</label>
+          <input
             type="text"
-            id="nome_usuario"
             className="register-input"
             placeholder="Digite seu nome"
             value={nome_usuario}
             onChange={(e) => setNomeUsuario(e.target.value)}
             required
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
           />
 
-          <motion.label
-            className="register-label"
-            htmlFor="email"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.45 }}
-          >
-            Email
-          </motion.label>
-          <motion.input
+          <label className="register-label">Email</label>
+          <input
             type="email"
-            id="email"
             className="register-input"
             placeholder="Digite seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
           />
 
-          <motion.label
-            className="register-label"
-            htmlFor="senha"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
-            Senha
-          </motion.label>
-          <motion.input
+          <label className="register-label">Senha</label>
+          <input
             type="password"
-            id="senha"
             className="register-input"
             placeholder="Digite sua senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             required
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65 }}
           />
 
           <motion.button
@@ -145,12 +105,47 @@ const Register = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.2 }}
           >
             Cadastrar
           </motion.button>
         </form>
       </motion.div>
+
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className={`modal-content ${modalType}`}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <img src={logo} alt="Logo" className="modal-logo" />
+
+              <h3 className="modal-title">
+                {modalType === "success" ? "Sucesso!" : "Atenção"}
+              </h3>
+
+              <p className="modal-text">{modalMessage}</p>
+
+              <motion.button
+                className="modal-close"
+                onClick={() => setShowModal(false)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                OK
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

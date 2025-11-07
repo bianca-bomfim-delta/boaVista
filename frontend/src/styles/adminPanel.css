@@ -124,6 +124,85 @@ button:hover {
   width: 100%;
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: #fff;
+  color: #1e293b;
+  padding: 2rem 2.2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 300px;
+  height: 200px;
+  max-width: 90%;
+  position: relative;
+  animation: fadeIn 0.4s ease;
+}
+
+.modal-logo {
+  width: 60px;
+  margin: 2px auto 0px;
+}
+
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.modal-text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.modal-content.success {
+  border-top: 5px solid #16a34a;
+}
+
+.modal-content.error {
+  border-top: 5px solid #dc2626;
+}
+
+.modal-close {
+  background: linear-gradient(90deg, #AD7B3A, #b17a32);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.modal-close:hover {
+  background: linear-gradient(90deg, #AD7B3A, #b17a32);
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
 @media (max-width: 992px) {
   .edit-profile-container {
     padding: 30px 35px;

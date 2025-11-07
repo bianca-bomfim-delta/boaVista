@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/editProfile.css";
 
 const EditProfile = () => {
@@ -12,18 +12,26 @@ const EditProfile = () => {
     fotoPreview: null,
   });
 
+  const [modal, setModal] = useState({ show: false, message: "", type: "" });
+
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
       const parsedUser = JSON.parse(userData);
       setUser({
         ...parsedUser,
+        senha: "",
         fotoPreview: parsedUser.foto
           ? `http://127.0.0.1:5000/uploads/${parsedUser.foto}`
           : null,
       });
     }
   }, []);
+
+  const showModal = (message, type = "info") => {
+    setModal({ show: true, message, type });
+    setTimeout(() => setModal({ show: false, message: "", type: "" }), 2500);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,8 +52,8 @@ const EditProfile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
 
-    if (user.senha && user.senha.length < 8) {
-      alert("A senha deve ter pelo menos 8 caracteres.");
+    if (user.senha?.trim() !== "" && user.senha.length < 8) {
+      showModal("Mínimo de 8 caracteres.", "error");
       return;
     }
 
@@ -54,13 +62,8 @@ const EditProfile = () => {
     formData.append("nome_usuario", user.nome_usuario);
     formData.append("email", user.email);
 
-    if (user.senha) {
-      formData.append("senha", user.senha);
-    }
-
-    if (user.foto instanceof File) {
-      formData.append("foto", user.foto);
-    }
+    if (user.senha) formData.append("senha", user.senha);
+    if (user.foto instanceof File) formData.append("foto", user.foto);
 
     try {
       const response = await fetch("http://127.0.0.1:5000/update-profile", {
@@ -72,48 +75,45 @@ const EditProfile = () => {
 
       if (response.ok) {
         const updatedUser = data.user;
-        const fotoUrl = updatedUser.foto
+        const novaFotoUrl = updatedUser.foto
           ? `http://127.0.0.1:5000/uploads/${updatedUser.foto}?t=${Date.now()}`
           : null;
 
-        const userToStore = { ...updatedUser, fotoPreview: fotoUrl };
-        setUser(userToStore);
-        localStorage.setItem("user", JSON.stringify(userToStore));
+        setUser((prevUser) => ({
+          ...prevUser,
+          nome_usuario: updatedUser.nome_usuario,
+          email: updatedUser.email,
+          foto: updatedUser.foto,
+          fotoPreview: novaFotoUrl,
+        }));
 
-        alert("Perfil atualizado com sucesso!");
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...updatedUser, fotoPreview: novaFotoUrl })
+        );
+
+        showModal("Perfil Atualizado", "success");
       } else {
-        alert(data.error || "Erro ao atualizar o perfil.");
+        showModal(data.error || "Erro ao atualizar o perfil.", "error");
       }
     } catch (error) {
       console.error("Erro ao salvar:", error);
-      alert("Erro na conexão com o servidor.");
+      showModal("Falha na Conexão", "error");
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 25 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
-  const formVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, delay: 0.2, ease: "easeOut" },
-    },
+  const modalVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
   };
 
   return (
     <motion.div
       className="user-edit-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+      initial={{ opacity: 0, y: 25 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.h2
         className="user-edit-title"
@@ -127,9 +127,9 @@ const EditProfile = () => {
       <motion.form
         onSubmit={handleSave}
         className="user-edit-form"
-        variants={formVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="user-photo-section">
           <motion.img
@@ -175,7 +175,7 @@ const EditProfile = () => {
           value={user.senha}
           onChange={handleChange}
           className="user-input"
-          placeholder="Alterar a Senha"
+          placeholder="Alterar a senha"
         />
 
         <motion.button
@@ -188,6 +188,20 @@ const EditProfile = () => {
           Salvar Alterações
         </motion.button>
       </motion.form>
+
+      <AnimatePresence>
+        {modal.show && (
+          <motion.div
+            className={`modal-alert ${modal.type}`}
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {modal.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
