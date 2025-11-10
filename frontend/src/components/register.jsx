@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/register.css";
 import logo from "../images/logo.png";
@@ -11,7 +10,6 @@ const Register = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("info");
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,10 +35,6 @@ const Register = () => {
         setModalType("success");
         setShowModal(true);
 
-        setTimeout(() => {
-          setShowModal(false);
-          navigate("/login");
-        }, 2500);
       } else {
         setModalMessage(data.error || "Erro ao cadastrar usuário.");
         setModalType("error");

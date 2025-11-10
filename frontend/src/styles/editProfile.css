@@ -36,22 +36,58 @@
 .user-photo-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100%;
+  text-align: center;
+  gap: 0;
 }
 
-.user-avatar {
+.user-photo-section > * {
+  align-self: center !important;
+}
+
+.user-photo-input {
+  display: none !important;
+}
+ .choose-photo-btn {
+  display: inline-block;
+  margin: 0.4rem auto 0 auto;
+  padding: 8px 16px;
+  background-color: #f7f8fc;
+  border: 1px solid #ccd2e3;
+  border-radius: 6px;
+  color: #081535;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.18s, border-color 0.18s, transform 0.12s;
+  user-select: none;
+  -webkit-user-select: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.choose-photo-btn:hover,
+.choose-photo-btn:focus {
+  background-color: #f0f1f7;
+  border-color: #ad7b3a;
+  transform: translateY(-1px);
+}
+
+.user-photo-section,
+.user-photo-section * {
+  position: static !important;
+}
+
+.profile-avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 1.5rem;
-  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+  margin-top: 0;
   border: 2px solid #ccc;
-}
-
-.user-photo-input {
-  margin-top: 0.5rem;
+  display: block
 }
 
 .user-label {
@@ -116,10 +152,7 @@
   background: linear-gradient(135deg, #102547bd, #0B1C3A);
 }
 
-.modal-alert.error {
-  background: linear-gradient(135deg, #836337b4, #946b39);
-}
-
+.modal-alert.error,
 .modal-alert.info {
   background: linear-gradient(135deg, #836337b4, #946b39);
 }

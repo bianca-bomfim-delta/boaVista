@@ -327,6 +327,28 @@ from flask import send_from_directory
 def uploaded_file(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
+@app.route("/delete-user/<int:id>", methods=["DELETE"])
+def delete_user(id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM usuario WHERE id = %s", (id,))
+        user = cursor.fetchone()
+        if not user:
+            conn.close()
+            return jsonify({"error": "Usuário não encontrado."}), 404
+
+        cursor.execute("DELETE FROM usuario WHERE id = %s", (id,))
+        conn.commit()
+        conn.close()
+
+        return jsonify({"message": "Usuário excluído com sucesso!"}), 200
+
+    except Exception as e:
+        print("Erro ao excluir usuário:", e)
+        return jsonify({"error": "Erro interno no servidor."}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

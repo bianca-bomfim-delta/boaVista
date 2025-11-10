@@ -10,7 +10,8 @@ import Layout from "./components/layout";
 
 import "./styles/style.css";
 import "./styles/authentication.css";
-import "./styles/score.css";
+import "./styles/scoreCpf.css";
+import "./styles/scoreCnpj.css";
 import "./styles/sidebar.css";
 import "./styles/editProfile.css";
 import "./styles/adminPanel.css";

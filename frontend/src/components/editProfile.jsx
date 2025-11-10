@@ -92,7 +92,7 @@ const EditProfile = () => {
           JSON.stringify({ ...updatedUser, fotoPreview: novaFotoUrl })
         );
 
-        showModal("Perfil Atualizado", "success");
+        showModal("Alterações salvas", "success");
       } else {
         showModal(data.error || "Erro ao atualizar o perfil.", "error");
       }
@@ -135,17 +135,23 @@ const EditProfile = () => {
           <motion.img
             src={user.fotoPreview || "/default-avatar.png"}
             alt="Foto de perfil"
-            className="user-avatar"
+            className="user-avatar profile-avatar"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           />
+
           <input
             type="file"
+            id="foto"
             accept="image/*"
             onChange={handleFileChange}
             className="user-photo-input"
           />
+
+          <label htmlFor="foto" className="choose-photo-btn">
+            Escolher arquivo
+          </label>
         </div>
 
         <label className="user-label">Nome:</label>

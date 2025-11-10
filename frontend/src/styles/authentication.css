@@ -123,7 +123,7 @@ html, body {
   background-color: #8b622f;
 }
 
-.modal-alert {
+.login-modal-alert {
   position: absolute;
   top: 30px;
   left: 36%;
@@ -139,11 +139,11 @@ html, body {
   text-align: center;
 }
 
-.modal-alert.error {
-  background: linear-gradient(135deg, #102547bd, #0B1C3A);
+.login-modal-alert.error {
+  background: linear-gradient(135deg,  #102547bd, #0B1C3A );
 }
 
-.modal-alert.info {
+.login-modal-alert.info {
   background: linear-gradient(135deg, #836337b4, #946b39);
 }
 

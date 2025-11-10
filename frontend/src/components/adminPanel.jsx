@@ -8,28 +8,42 @@ const AdminPanel = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("info");
   const [showModal, setShowModal] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [confirmMode, setConfirmMode] = useState(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((err) => {
-        console.error("Erro ao carregar usuários:", err);
-        showAlert("Erro ao carregar usuários.", "error");
-      });
+    carregarUsuarios();
   }, []);
+
+  const carregarUsuarios = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/users");
+      const data = await res.json();
+      setUsers(data);
+    } catch (err) {
+      console.error("Erro ao carregar usuários:", err);
+      showAlert("Erro ao carregar usuários.", "error");
+    }
+  };
 
   const showAlert = (message, type = "info") => {
     setModalMessage(message);
     setModalType(type);
     setShowModal(true);
+    setConfirmMode(false);
+  };
+
+  const showConfirmDelete = (id) => {
+    setConfirmDeleteId(id);
+    setModalMessage("Deseja realmente excluir este usuário?");
+    setModalType("warning");
+    setShowModal(true);
+    setConfirmMode(true);
   };
 
   const handlePasswordChange = (id, value) => {
     setUsers(
-      users.map((user) =>
-        user.id === id ? { ...user, senha: value } : user
-      )
+      users.map((user) => (user.id === id ? { ...user, senha: value } : user))
     );
   };
 
@@ -59,7 +73,29 @@ const AdminPanel = () => {
       }
     } catch (error) {
       console.error("Erro:", error);
-      showAlert("Não foi possível conectar ao servidor.", "error");
+      showAlert("Servidor indisponível", "error");
+    }
+  };
+
+  const handleDeleteConfirmed = async () => {
+    if (!confirmDeleteId) return;
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5000/delete-user/${confirmDeleteId}`,
+        { method: "DELETE" }
+      );
+
+      if (response.ok) {
+        setUsers(users.filter((user) => user.id !== confirmDeleteId));
+        showAlert("Usuário excluído com sucesso!", "success");
+      } else {
+        const data = await response.json();
+        showAlert(data.error || "Erro ao excluir usuário.", "error");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      showAlert("Falha ao conectar com o servidor.", "error");
     }
   };
 
@@ -93,7 +129,7 @@ const AdminPanel = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Editar Senha dos Usuários
+        Gerenciar Usuários
       </motion.h2>
 
       <motion.table
@@ -130,14 +166,24 @@ const AdminPanel = () => {
                   transition={{ duration: 0.2 }}
                 />
               </td>
-              <td>
+              <td className="actions">
                 <motion.button
+                  className="btn-save"
                   onClick={() => handleSave(user.id, user.senha)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
                   Salvar
+                </motion.button>
+                <motion.button
+                  className="btn-delete"
+                  onClick={() => showConfirmDelete(user.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Excluir
                 </motion.button>
               </td>
             </motion.tr>
@@ -161,21 +207,49 @@ const AdminPanel = () => {
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <img src={logo} alt="Logo" className="modal-logo" />
-
               <h3 className="modal-title">
-                {modalType === "success" ? "Sucesso!" : "Atenção"}
+                {confirmMode
+                  ? "Confirmação"
+                  : modalType === "success"
+                  ? "Sucesso!"
+                  : "Atenção"}
               </h3>
-
               <p className="modal-text">{modalMessage}</p>
 
-              <motion.button
-                className="modal-close"
-                onClick={() => setShowModal(false)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                OK
-              </motion.button>
+              <div className="modal-buttons">
+                {confirmMode ? (
+                  <>
+                    <motion.button
+                      className="modal-cancel"
+                      onClick={() => setShowModal(false)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Cancelar
+                    </motion.button>
+                    <motion.button
+                      className="modal-confirm"
+                      onClick={() => {
+                        handleDeleteConfirmed();
+                        setShowModal(false);
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Confirmar
+                    </motion.button>
+                  </>
+                ) : (
+                  <motion.button
+                    className="modal-close"
+                    onClick={() => setShowModal(false)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    OK
+                  </motion.button>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}

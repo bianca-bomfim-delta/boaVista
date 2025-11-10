@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "../styles/score.css";
+import "../styles/scoreCpf.css";
+import logo from "../images/logo.png";
 
 const Score = () => {
   const [cpf, setCpf] = useState("");
   const [resultado, setResultado] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("");
 
   const formatCpf = (value) => {
     let v = value.replace(/\D/g, "").slice(0, 11);
@@ -14,11 +18,24 @@ const Score = () => {
     return v;
   };
 
+  const showAlert = (message, type = "error") => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!cpf) {
-      alert("Por favor, digite um CPF válido.");
+    const cpfNumerico = cpf.replace(/\D/g, "");
+
+    if (!cpfNumerico) {
+      showAlert("Por favor, digite um CPF válido.", "error");
+      return;
+    }
+
+    if (cpfNumerico.length < 11) {
+      showAlert("Informe um CPF com 11 dígitos", "error");
       return;
     }
 
@@ -34,12 +51,12 @@ const Score = () => {
       if (response.ok) {
         setResultado(data);
       } else {
-        alert(data.error || "Erro na consulta.");
+        showAlert(data.error || "Erro na consulta.", "error");
         setResultado(null);
       }
     } catch (error) {
       console.error("Erro:", error);
-      alert("Falha ao conectar com o servidor.");
+      showAlert("Falha ao conectar com o servidor.", "error");
     }
   };
 
@@ -73,7 +90,7 @@ const Score = () => {
 
   return (
     <motion.div
-      className="score-container"
+      className="cpf-score-container"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -107,7 +124,7 @@ const Score = () => {
             />
             <motion.button
               type="submit"
-              className="button-score"
+              className="button-cpf-score"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
@@ -122,7 +139,7 @@ const Score = () => {
         {resultado && (
           <motion.div
             key="resultado-card"
-            className="card"
+            className="cpf-card"
             variants={cardVariants}
             initial="hidden"
             animate="visible"
@@ -138,7 +155,7 @@ const Score = () => {
 
             <motion.button
               onClick={novaConsulta}
-              className="button-score"
+              className="button-cpf-score"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
@@ -146,6 +163,42 @@ const Score = () => {
             >
               Nova Consulta
             </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className={`modal-content ${modalType}`}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <img src={logo} alt="Logo" className="modal-logo" />
+
+              <h3 className="modal-title">
+                {modalType === "success" ? "Sucesso!" : "Atenção"}
+              </h3>
+
+              <p className="modal-text">{modalMessage}</p>
+
+              <motion.button
+                className="modal-close"
+                onClick={() => setShowModal(false)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                OK
+              </motion.button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

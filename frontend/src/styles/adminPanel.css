@@ -124,6 +124,41 @@ button:hover {
   width: 100%;
 }
 
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal-cancel,
+.modal-confirm {
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.modal-cancel {
+  background-color: #AD7B3A;
+  color: white;
+}
+
+.modal-cancel:hover {
+  background-color: #636e72;
+}
+
+.modal-confirm {
+  background-color: #0b1c3a;
+  color: white;
+}
+
+.modal-confirm:hover {
+  background-color: #0b1c3a;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -190,6 +225,7 @@ button:hover {
   background: linear-gradient(90deg, #AD7B3A, #b17a32);
   transform: translateY(-2px);
 }
+
 
 @keyframes fadeIn {
   from {

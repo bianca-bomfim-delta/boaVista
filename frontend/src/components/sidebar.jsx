@@ -9,12 +9,15 @@ import {
   ChevronUp,
   ClipboardList,
   Users,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/sidebar.css";
 
 export default function Sidebar() {
   const [openServicos, setOpenServicos] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -31,38 +34,30 @@ export default function Sidebar() {
   };
 
   const sidebarVariants = {
-    hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, delay: 0.2 + i * 0.1 },
-    }),
+    expanded: { width: "220px", transition: { duration: 0.3 } },
+    collapsed: { width: "70px", transition: { duration: 0.3 } },
   };
 
   return (
     <motion.div
-      className="sidebar"
+      className={`sidebar ${isCollapsed ? "collapsed" : ""}`}
       variants={sidebarVariants}
-      initial="hidden"
-      animate="visible"
+      animate={isCollapsed ? "collapsed" : "expanded"}
     >
-      <motion.h2 variants={itemVariants} custom={0}>
-        Delta
-      </motion.h2>
+      <div className="sidebar-header">
+        {!isCollapsed && <h2>Delta</h2>}
+        <button
+          className="toggle-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        </button>
+      </div>
 
       {user && (
-        <motion.div
-          className="user-info"
-          variants={itemVariants}
-          custom={1}
-        >
+        <div className={`user-info ${isCollapsed ? "collapsed-user" : ""}`}>
           <div className="user-avatar-wrapper">
-            <motion.img
+            <img
               src={
                 user.foto
                   ? `http://127.0.0.1:5000/uploads/${user.foto}?t=${Date.now()}`
@@ -70,101 +65,77 @@ export default function Sidebar() {
               }
               alt="Foto do usuário"
               className="user-avatar"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
             />
-            <motion.img
-              src="/logo.png"
-              alt="Logo da empresa"
-              className="user-logo-bg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            />
+            {!isCollapsed && (
+              <>
+                <img src="/logo.png" alt="Logo" className="user-logo-bg" />
+                <h3 className="user-name">{user.nome_usuario}</h3>
+                <p className="user-email">{user.email}</p>
+              </>
+            )}
           </div>
-
-          <motion.h3
-            className="user-name"
-            variants={itemVariants}
-            custom={2}
-          >
-            {user.nome_usuario}
-          </motion.h3>
-
-          <motion.p
-            className="user-email"
-            variants={itemVariants}
-            custom={3}
-          >
-            {user.email}
-          </motion.p>
-        </motion.div>
+        </div>
       )}
 
-      <motion.div className="menu-item" variants={itemVariants} custom={4}>
+      <div className="menu-item">
         <button
           onClick={() => setOpenServicos(!openServicos)}
           className="submenu-toggle"
         >
-          <ClipboardList size={18} style={{ marginRight: "8px" }} />
-          Serviços{" "}
-          {openServicos ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          <ClipboardList size={18} />
+          {!isCollapsed && (
+            <>
+              <span>Serviços</span>
+              {openServicos ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </>
+          )}
         </button>
 
-        {openServicos && (
-          <motion.div
-            className="submenu"
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Link to="/scoreCpf" className="submenu-link">
-              <FileText size={16} style={{ marginRight: "6px" }} />
-              Consulta por CPF
-            </Link>
-            <Link to="/scoreCnpj" className="submenu-link">
-              <FileText size={16} style={{ marginRight: "6px" }} />
-              Consulta por CNPJ
-            </Link>
-          </motion.div>
-        )}
-      </motion.div>
+        <AnimatePresence>
+          {openServicos && !isCollapsed && (
+            <motion.div
+              className="submenu"
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.1 }}
+            >
+              <Link to="/scoreCpf">
+                <FileText size={16} />
+                <span>Consulta por CPF</span>
+              </Link>
+              <Link to="/scoreCnpj">
+                <FileText size={16} />
+                <span>Consulta por CNPJ</span>
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-      <motion.div variants={itemVariants} custom={5}>
-        <Link to="/editProfile" className="menu-link">
-          <User size={18} style={{ marginRight: "8px" }} />
-          Editar Perfil
-        </Link>
-      </motion.div>
+      <Link to="/editProfile" className="menu-link">
+        <User size={18} />
+        {!isCollapsed && <span>Editar Perfil</span>}
+      </Link>
 
       {user?.id === 1 && (
         <>
-          <motion.div variants={itemVariants} custom={6}>
-            <Link to="/register" className="menu-link">
-              <Users size={18} style={{ marginRight: "8px" }} />
-              Cadastrar Usuário
-            </Link>
-          </motion.div>
+          <Link to="/register" className="menu-link">
+            <Users size={18} />
+            {!isCollapsed && <span>Cadastrar Usuário</span>}
+          </Link>
 
-          <motion.div variants={itemVariants} custom={7}>
-            <Link to="/adminPanel" className="menu-link">
-              <Settings size={18} style={{ marginRight: "8px" }} />
-              Alterar Senhas
-            </Link>
-          </motion.div>
+          <Link to="/adminPanel" className="menu-link">
+            <Settings size={18} />
+            {!isCollapsed && <span>Alterar Senhas</span>}
+          </Link>
         </>
       )}
 
-      <motion.button
-        className="logout-btn"
-        onClick={handleLogout}
-        variants={itemVariants}
-        custom={8}
-      >
-        <LogOut size={18} style={{ marginRight: "8px" }} />
-        Sair
-      </motion.button>
+      <button className="logout-btn" onClick={handleLogout}>
+        <LogOut size={18} />
+        {!isCollapsed && <span>Sair</span>}
+      </button>
     </motion.div>
   );
 }

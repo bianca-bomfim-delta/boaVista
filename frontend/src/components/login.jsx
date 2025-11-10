@@ -48,7 +48,7 @@ const Login = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.3,
+        duration: 0.2,
         when: "beforeChildren",
         staggerChildren: 0.15,
       },
@@ -57,7 +57,7 @@ const Login = () => {
 
   const childVariants = {
     hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.2 } },
   };
 
   return (
@@ -88,8 +88,8 @@ const Login = () => {
         <AnimatePresence>
     {modal.show && (
       <motion.div
-        key="modal-alert"
-        className={`modal-alert ${modal.type}`}
+        key="login-modal-alert"
+        className={`login-modal-alert ${modal.type}`}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
