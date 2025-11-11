@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/adminPanel.css";
+import { Trash2 } from "lucide-react";
+import { FaTrash } from "react-icons/fa";
 import logo from "../images/logo.png";
 
 const AdminPanel = () => {
@@ -166,25 +168,28 @@ const AdminPanel = () => {
                   transition={{ duration: 0.2 }}
                 />
               </td>
-              <td className="actions">
-                <motion.button
-                  className="btn-save"
-                  onClick={() => handleSave(user.id, user.senha)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Salvar
-                </motion.button>
-                <motion.button
-                  className="btn-delete"
-                  onClick={() => showConfirmDelete(user.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Excluir
-                </motion.button>
+              <td>
+                <div className="action-buttons">
+                  <motion.button
+                    className="btn-save"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={() => handleSave(user.id, user.senha)}
+                  >
+                    Salvar
+                  </motion.button>
+
+                  <motion.button
+                    className="btn-delete"
+                    onClick={() => showConfirmDelete(user.id)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <FaTrash />
+                  </motion.button>
+                </div>
               </td>
             </motion.tr>
           ))}
@@ -211,8 +216,8 @@ const AdminPanel = () => {
                 {confirmMode
                   ? "Confirmação"
                   : modalType === "success"
-                  ? "Sucesso!"
-                  : "Atenção"}
+                    ? "Sucesso!"
+                    : "Atenção"}
               </h3>
               <p className="modal-text">{modalMessage}</p>
 

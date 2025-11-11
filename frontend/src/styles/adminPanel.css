@@ -86,24 +86,46 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(173, 123, 58, 0.25);
 }
 
-button {
-  padding: 12px 28px;
-  margin-top: 10px;
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.btn-save {
   background-color: #081535;
   color: #fff;
   border: none;
+  padding: 8px 18px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   transition: all 0.25s ease;
 }
 
-button:hover {
-  background-color: #AD7B3A;
+.btn-save:hover {
+  background-color: #081535;
   transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(173, 123, 58, 0.25);
+  box-shadow: 0 3px 6px #ad7b3a40;
 }
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #dc2626;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  font-size: 18px;
+}
+
+.btn-delete:hover {
+  background-color: #dc26261a;
+}
+
 
 .section {
   margin-bottom: 20px;
@@ -147,7 +169,7 @@ button:hover {
 }
 
 .modal-cancel:hover {
-  background-color: #636e72;
+  background-color: #AD7B3A;
 }
 
 .modal-confirm {
@@ -237,7 +259,6 @@ button:hover {
     transform: scale(1);
   }
 }
-
 
 @media (max-width: 992px) {
   .edit-profile-container {

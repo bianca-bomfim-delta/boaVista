@@ -45,7 +45,11 @@ def login():
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, nome_usuario, email, foto FROM usuario WHERE email = %s AND senha = %s", (email, senha))
+    cur.execute("""
+        SELECT id, nome_usuario, email, foto, administrador
+        FROM usuario
+        WHERE email = %s AND senha = %s
+    """, (email, senha))
     user = cur.fetchone()
     cur.close()
     conn.close()
@@ -55,16 +59,14 @@ def login():
         nome = user[1]
         email = user[2]
         foto = user[3]
-
-        is_admin = user_id == 1
+        administrador = user[4]  
 
         return jsonify({
             "id": user_id,
             "nome_usuario": nome,
             "email": email,
-            "is_admin": is_admin,
-             "foto": foto,
-            "message": f"Bem-vindo, {nome}!"
+            "administrador": administrador,
+            "foto": foto,
         }), 200
     else:
         return jsonify({"error": "Credenciais inválidas"}), 401
@@ -114,65 +116,63 @@ def register():
         }
     }), 201
 
-
-
+ 
 @app.route("/fetch-score", methods=["POST"])
 def fetch_score():
     data = request.get_json()
     cpf = data.get("cpf")
 
-    if not cpf:
-        return jsonify({"error": "CPF é obrigatório"}), 400
-    
-    # alterar essa parte quando tivermos acesso a api da boa vista 
-
-
-    # isso daqui é apenas a simulação temporaria
-    xml_response = """
-    <root>
-        <tr_601:score_classificacao_varios_modelos xmlns:tr_601="urn:exemplo">
-            <tr_601:registro>S</tr_601:registro>
-            <tr_601:score>9</tr_601:score>
-            <tr_601:nomeScore>Renda Presum Faixa</tr_601:nomeScore>
-            <tr_601:texto>De R$ 7.001 até R$ 9.000</tr_601:texto>
-            <tr_601:descricaoNatureza>RENDA PRESUMIDA</tr_601:descricaoNatureza>
-        </tr_601:score_classificacao_varios_modelos>
-
-        <tr_940:mensagem_registro xmlns:tr_940="urn:exemplo">
-            <tr_940:registro>S</tr_940:registro>
-            <tr_940:texto>Consulta simulada de score.</tr_940:texto>
-        </tr_940:mensagem_registro>
-    </root>
+    # 🔸 Simulação da resposta XML da API real
+    xml_response = f"""
+    <consulta>
+        <nome>MICHAEL SANTOS GOMES</nome>
+        <cpf>{cpf}</cpf>
+        <score>275</score>
+        <recomendacao>Reprovar</recomendacao>
+        <textoRecomendacao>Essa sugestão ocorre quando o documento se enquadra em ao menos um dos cenários abaixo...</textoRecomendacao>
+        <probabilidadeInadimplencia>18</probabilidadeInadimplencia>
+        <rendaPresumida>R$ 1.401 até R$ 2.000</rendaPresumida>
+        <pontualidadePagamentos>B</pontualidadePagamentos>
+        <contratosRecentes>C</contratosRecentes>
+        <faturasAtraso>D</faturasAtraso>
+        <enderecos>
+            <endereco>
+                <logradouro>R FLOR DA REDENCAO, 513</logradouro>
+                <bairro>VL JACUI</bairro>
+                <cidade>SAO PAULO</cidade>
+                <cep>08050-060</cep>
+            </endereco>
+        </enderecos>
+    </consulta>
     """
 
+    # 🔸 Converter XML → JSON (mantendo formato do frontend)
     root = ET.fromstring(xml_response)
-    scores = []
-    messages = []
 
-    for score in root.findall(".//{urn:exemplo}score_classificacao_varios_modelos"):
-        registro = score.find("{urn:exemplo}registro")
-        if registro is not None and registro.text == "S":
-            scores.append({
-                "score": score.findtext("{urn:exemplo}score"),
-                "nomeScore": score.findtext("{urn:exemplo}nomeScore"),
-                "texto": score.findtext("{urn:exemplo}texto"),
-                "descricaoNatureza": score.findtext("{urn:exemplo}descricaoNatureza"),
-            })
-
-    for msg in root.findall(".//{urn:exemplo}mensagem_registro"):
-        registro = msg.find("{urn:exemplo}registro")
-        if registro is not None and registro.text == "S":
-            messages.append({
-                "texto": msg.findtext("{urn:exemplo}texto")
-            })
-
-    result = {
-        "cpf": cpf,
-        "scores": scores,
-        "messages": messages or [{"texto": "Nenhuma mensagem disponível."}]
+    resultado = {
+        "nome": root.findtext("nome"),
+        "cpf": root.findtext("cpf"),
+        "scores": [{"score": int(root.findtext("score") or 0)}],
+        "recomendacao": root.findtext("recomendacao"),
+        "textoRecomendacao": root.findtext("textoRecomendacao"),
+        "probabilidadeInadimplencia": int(root.findtext("probabilidadeInadimplencia") or 0),
+        "rendaPresumida": root.findtext("rendaPresumida"),
+        "pontualidadePagamentos": root.findtext("pontualidadePagamentos"),
+        "contratosRecentes": root.findtext("contratosRecentes"),
+        "faturasAtraso": root.findtext("faturasAtraso"),
+        "enderecos": [
+            {
+                "logradouro": root.findtext(".//enderecos/endereco/logradouro"),
+                "bairro": root.findtext(".//enderecos/endereco/bairro"),
+                "cidade": root.findtext(".//enderecos/endereco/cidade"),
+                "cep": root.findtext(".//enderecos/endereco/cep"),
+            }
+        ],
+        "mensagem": "Consulta simulada (XML convertido para JSON)."
     }
 
-    return jsonify(result), 200
+    return jsonify(resultado)
+
 
 @app.route("/fetch-score-cnpj", methods=["POST"])
 def fetch_score_cnpj():

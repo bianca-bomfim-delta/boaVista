@@ -23,14 +23,20 @@ export default function Sidebar() {
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
+    if (userData) setUser(JSON.parse(userData));
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/login");
+  };
+
+  const updateUser = (updates) => {
+    setUser((prev) => {
+      const updatedUser = { ...prev, ...updates };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return updatedUser;
+    });
   };
 
   const sidebarVariants = {
@@ -46,10 +52,7 @@ export default function Sidebar() {
     >
       <div className="sidebar-header">
         {!isCollapsed && <h2>Delta</h2>}
-        <button
-          className="toggle-btn"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
+        <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
           {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
@@ -78,10 +81,7 @@ export default function Sidebar() {
       )}
 
       <div className="menu-item">
-        <button
-          onClick={() => setOpenServicos(!openServicos)}
-          className="submenu-toggle"
-        >
+        <button onClick={() => setOpenServicos(!openServicos)} className="submenu-toggle">
           <ClipboardList size={18} />
           {!isCollapsed && (
             <>
@@ -118,7 +118,7 @@ export default function Sidebar() {
         {!isCollapsed && <span>Editar Perfil</span>}
       </Link>
 
-      {user?.id === 1 && (
+      {user?.administrador && (
         <>
           <Link to="/register" className="menu-link">
             <Users size={18} />
