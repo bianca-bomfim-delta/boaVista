@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { UserProvider } from  "./contexts/userContext";
 
 import Login from "./components/login";
 import Register from "./components/register";
@@ -19,23 +20,24 @@ import "./styles/register.css";
 
 const App = () => {
   return (
-    <Router>
-  <Routes>
-    {/* login */}
-    <Route path="/" element={<Navigate to="/login" replace />} />
-    <Route path="/login" element={<Login />} />
+    <UserProvider>
+      <Router>
+        <Routes>
+          {/* login */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
 
-    {/* Rotas internas*/}
-    <Route element={<Layout />}>
-      <Route path="/scoreCpf" element={<ScoreCpf />} />
-      <Route path="/scoreCnpj" element={<ScoreCnpj />} />
-      <Route path="/editProfile" element={<EditProfile />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/adminPanel" element={<AdminPanel />} />
-    </Route>
-  </Routes>
-</Router>
-
+          {/* Rotas internas */}
+          <Route element={<Layout />}>
+            <Route path="/scoreCpf" element={<ScoreCpf />} />
+            <Route path="/scoreCnpj" element={<ScoreCnpj />} />
+            <Route path="/editProfile" element={<EditProfile />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/adminPanel" element={<AdminPanel />} />
+          </Route>
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 };
 

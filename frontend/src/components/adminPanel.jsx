@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/adminPanel.css";
-import { Trash2 } from "lucide-react";
 import { FaTrash } from "react-icons/fa";
 import logo from "../images/logo.png";
 

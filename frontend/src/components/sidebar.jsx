@@ -13,30 +13,27 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUser } from "../contexts/userContext";
 import "../styles/sidebar.css";
 
 export default function Sidebar() {
   const [openServicos, setOpenServicos] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [user, setUser] = useState(null);
+
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    if (userData) setUser(JSON.parse(userData));
-  }, []);
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, [setUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    setUser(null); 
     navigate("/login");
-  };
-
-  const updateUser = (updates) => {
-    setUser((prev) => {
-      const updatedUser = { ...prev, ...updates };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      return updatedUser;
-    });
   };
 
   const sidebarVariants = {
@@ -79,6 +76,7 @@ export default function Sidebar() {
           </div>
         </div>
       )}
+
 
       <div className="menu-item">
         <button onClick={() => setOpenServicos(!openServicos)} className="submenu-toggle">
@@ -137,5 +135,6 @@ export default function Sidebar() {
         {!isCollapsed && <span>Sair</span>}
       </button>
     </motion.div>
+
   );
 }

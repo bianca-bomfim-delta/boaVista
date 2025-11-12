@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUser } from "../contexts/userContext"; 
 import "../styles/editProfile.css";
 
 const EditProfile = () => {
-  const [user, setUser] = useState({
+  const { user, setUser } = useUser();
+  const [localUser, setLocalUser] = useState({
     id: "",
     nome_usuario: "",
     email: "",
@@ -15,18 +17,29 @@ const EditProfile = () => {
   const [modal, setModal] = useState({ show: false, message: "", type: "" });
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser({
-        ...parsedUser,
+    if (user && user.id) {
+      setLocalUser({
+        ...user,
         senha: "",
-        fotoPreview: parsedUser.foto
-          ? `http://127.0.0.1:5000/uploads/${parsedUser.foto}`
+        fotoPreview: user.foto
+          ? `http://127.0.0.1:5000/uploads/${user.foto}`
           : null,
       });
+    } else {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setLocalUser({
+          ...parsedUser,
+          senha: "",
+          fotoPreview: parsedUser.foto
+            ? `http://127.0.0.1:5000/uploads/${parsedUser.foto}`
+            : null,
+        });
+        setUser(parsedUser);
+      }
     }
-  }, []);
+  }, [user, setUser]);
 
   const showModal = (message, type = "info") => {
     setModal({ show: true, message, type });
@@ -35,14 +48,14 @@ const EditProfile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setLocalUser({ ...localUser, [name]: value });
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setUser({
-        ...user,
+      setLocalUser({
+        ...localUser,
         foto: file,
         fotoPreview: URL.createObjectURL(file),
       });
@@ -52,18 +65,18 @@ const EditProfile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
 
-    if (user.senha?.trim() !== "" && user.senha.length < 8) {
+    if (localUser.senha?.trim() !== "" && localUser.senha.length < 8) {
       showModal("Mínimo de 8 caracteres.", "error");
       return;
     }
 
     const formData = new FormData();
-    formData.append("id", user.id);
-    formData.append("nome_usuario", user.nome_usuario);
-    formData.append("email", user.email);
+    formData.append("id", localUser.id);
+    formData.append("nome_usuario", localUser.nome_usuario);
+    formData.append("email", localUser.email);
 
-    if (user.senha) formData.append("senha", user.senha);
-    if (user.foto instanceof File) formData.append("foto", user.foto);
+    if (localUser.senha) formData.append("senha", localUser.senha);
+    if (localUser.foto instanceof File) formData.append("foto", localUser.foto);
 
     try {
       const response = await fetch("http://127.0.0.1:5000/update-profile", {
@@ -79,7 +92,8 @@ const EditProfile = () => {
           ? `http://127.0.0.1:5000/uploads/${updatedUser.foto}?t=${Date.now()}`
           : null;
 
-        setUser((prevUser) => ({
+
+        setLocalUser((prevUser) => ({
           ...prevUser,
           nome_usuario: updatedUser.nome_usuario,
           email: updatedUser.email,
@@ -87,6 +101,14 @@ const EditProfile = () => {
           fotoPreview: novaFotoUrl,
         }));
 
+        // ✅ Atualiza o contexto global
+        setUser((prev) => ({
+          ...prev,
+          ...updatedUser,
+          fotoPreview: novaFotoUrl,
+        }));
+
+        // ✅ Atualiza o localStorage
         localStorage.setItem(
           "user",
           JSON.stringify({ ...updatedUser, fotoPreview: novaFotoUrl })
@@ -133,7 +155,7 @@ const EditProfile = () => {
       >
         <div className="user-photo-section">
           <motion.img
-            src={user.fotoPreview || "/default-avatar.png"}
+            src={localUser.fotoPreview || "/default-avatar.png"}
             alt="Foto de perfil"
             className="user-avatar profile-avatar"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -158,7 +180,7 @@ const EditProfile = () => {
         <input
           type="text"
           name="nome_usuario"
-          value={user.nome_usuario}
+          value={localUser.nome_usuario}
           onChange={handleChange}
           className="user-input"
           required
@@ -168,7 +190,7 @@ const EditProfile = () => {
         <input
           type="email"
           name="email"
-          value={user.email}
+          value={localUser.email}
           onChange={handleChange}
           className="user-input"
           required
@@ -178,7 +200,7 @@ const EditProfile = () => {
         <input
           type="password"
           name="senha"
-          value={user.senha}
+          value={localUser.senha}
           onChange={handleChange}
           className="user-input"
           placeholder="Alterar a senha"
