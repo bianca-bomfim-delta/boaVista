@@ -1,0 +1,70 @@
+/* ===== Layout Base ===== */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: 220px;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* ===== Conteúdo Principal ===== */
+.main-content {
+  flex: 1;
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease, padding 0.3s ease;
+}
+
+/* sidebar recolhida */
+.sidebar.collapsed ~ .main-content {
+  margin-left: 70px;
+}
+
+/* ===== Responsividade ===== */
+
+/* Tablets e telas médias */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 180px;
+    padding: 30px;
+  }
+}
+
+/* Telas pequenas / mobile */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column; 
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
+
+/* (celulares pequenos) */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 15px;
+  }
+}

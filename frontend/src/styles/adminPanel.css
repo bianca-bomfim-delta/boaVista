@@ -1,3 +1,9 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .edit-profile-container {
   background: #ffffff;
   padding: 40px 50px;
@@ -140,10 +146,9 @@ select:focus {
 }
 
 .admin-panel-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  width: calc(100% - 35px);
+  margin-left: 35px;
+  transition: margin-left 0.3s ease;
 }
 
 .modal-buttons {
@@ -257,6 +262,18 @@ select:focus {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-panel-wrapper {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-panel-wrapper {
+    padding: 1rem;
   }
 }
 

@@ -51,10 +51,10 @@
   position: absolute;
   top: 5px;
   left: 65%;
-  width: 79px;
-  height: 79px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  opacity: 0.7 !important;
+  opacity: 0.7;
   z-index: 0;
   transform: translate(-50%, 0);
   pointer-events: none;
@@ -69,7 +69,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #886940;
-  margin-bottom: 10px;
+  margin: 4px 0px 10px -35px;
 }
 
 .user-name {

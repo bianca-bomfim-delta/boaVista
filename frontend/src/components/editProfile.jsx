@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useUser } from "../contexts/userContext"; 
+import { useUser } from "../contexts/userContext";
 import "../styles/editProfile.css";
 
 const EditProfile = () => {
@@ -92,7 +92,6 @@ const EditProfile = () => {
           ? `http://127.0.0.1:5000/uploads/${updatedUser.foto}?t=${Date.now()}`
           : null;
 
-
         setLocalUser((prevUser) => ({
           ...prevUser,
           nome_usuario: updatedUser.nome_usuario,
@@ -101,137 +100,136 @@ const EditProfile = () => {
           fotoPreview: novaFotoUrl,
         }));
 
-        // ✅ Atualiza o contexto global
-        setUser((prev) => ({
+        setUser((prev) => {
+          const newUser = {
           ...prev,
           ...updatedUser,
+          administrador: prev.administrador,
           fotoPreview: novaFotoUrl,
-        }));
+        };
 
-        // ✅ Atualiza o localStorage
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ ...updatedUser, fotoPreview: novaFotoUrl })
-        );
+        localStorage.setItem("user", JSON.stringify(newUser));
+        return newUser;
+      });
 
-        showModal("Alterações salvas", "success");
-      } else {
-        showModal(data.error || "Erro ao atualizar o perfil.", "error");
-      }
-    } catch (error) {
-      console.error("Erro ao salvar:", error);
-      showModal("Falha na Conexão", "error");
+      showModal("Alterações salvas", "success");
+    } else {
+      showModal(data.error || "Erro ao atualizar o perfil.", "error");
     }
-  };
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+    showModal("Falha na Conexão", "error");
+  }
+};
 
-  const modalVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
-  };
+const modalVariants = {
+  hidden: { opacity: 0, y: -10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+};
 
-  return (
-    <motion.div
-      className="user-edit-container"
-      initial={{ opacity: 0, y: 25 }}
+return (
+  <motion.div
+    className="user-edit-container"
+    initial={{ opacity: 0, y: 25 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+  >
+    <motion.h2
+      className="user-edit-title"
+      initial={{ opacity: 0, y: -15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6 }}
     >
-      <motion.h2
-        className="user-edit-title"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      Editar Meu Perfil
+    </motion.h2>
+
+    <motion.form
+      onSubmit={handleSave}
+      className="user-edit-form"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <div className="user-photo-section">
+        <motion.img
+          src={localUser.fotoPreview || "/default-avatar.png"}
+          alt="Foto de perfil"
+          className="profile-avatar"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        />
+
+        <input
+          type="file"
+          id="foto"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="user-photo-input"
+        />
+
+        <label htmlFor="foto" className="choose-photo-btn">
+          Escolher arquivo
+        </label>
+      </div>
+
+      <label className="user-label">Nome:</label>
+      <input
+        type="text"
+        name="nome_usuario"
+        value={localUser.nome_usuario}
+        onChange={handleChange}
+        className="user-input"
+        required
+      />
+
+      <label className="user-label">Email:</label>
+      <input
+        type="email"
+        name="email"
+        value={localUser.email}
+        onChange={handleChange}
+        className="user-input"
+        required
+      />
+
+      <label className="user-label">Senha:</label>
+      <input
+        type="password"
+        name="senha"
+        value={localUser.senha}
+        onChange={handleChange}
+        className="user-input"
+        placeholder="Alterar a senha"
+      />
+
+      <motion.button
+        type="submit"
+        className="user-save-btn"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ duration: 0.2 }}
       >
-        Editar Meu Perfil
-      </motion.h2>
+        Salvar Alterações
+      </motion.button>
+    </motion.form>
 
-      <motion.form
-        onSubmit={handleSave}
-        className="user-edit-form"
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className="user-photo-section">
-          <motion.img
-            src={localUser.fotoPreview || "/default-avatar.png"}
-            alt="Foto de perfil"
-            className="user-avatar profile-avatar"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          />
-
-          <input
-            type="file"
-            id="foto"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="user-photo-input"
-          />
-
-          <label htmlFor="foto" className="choose-photo-btn">
-            Escolher arquivo
-          </label>
-        </div>
-
-        <label className="user-label">Nome:</label>
-        <input
-          type="text"
-          name="nome_usuario"
-          value={localUser.nome_usuario}
-          onChange={handleChange}
-          className="user-input"
-          required
-        />
-
-        <label className="user-label">Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={localUser.email}
-          onChange={handleChange}
-          className="user-input"
-          required
-        />
-
-        <label className="user-label">Senha:</label>
-        <input
-          type="password"
-          name="senha"
-          value={localUser.senha}
-          onChange={handleChange}
-          className="user-input"
-          placeholder="Alterar a senha"
-        />
-
-        <motion.button
-          type="submit"
-          className="user-save-btn"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.2 }}
+    <AnimatePresence>
+      {modal.show && (
+        <motion.div
+          className={`modal-alert ${modal.type}`}
+          variants={modalVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
         >
-          Salvar Alterações
-        </motion.button>
-      </motion.form>
-
-      <AnimatePresence>
-        {modal.show && (
-          <motion.div
-            className={`modal-alert ${modal.type}`}
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {modal.message}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
+          {modal.message}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </motion.div>
+);
 };
 
 export default EditProfile;

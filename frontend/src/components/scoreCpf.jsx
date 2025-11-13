@@ -90,7 +90,7 @@ const Score = () => {
       animate="visible"
     >
       <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-        Consulta de Score CPF
+        Acerta Mais Positivo
       </motion.h1>
 
       <AnimatePresence>
@@ -137,11 +137,9 @@ const Score = () => {
               <h2>Resultado da Consulta</h2>
 
               {/* Velocímetro */}
-
               <div className="gauge-container">
                 <ResponsiveContainer width="100%" height={180}>
                   <PieChart>
-                    {/* Fundo cinza (faixa completa) */}
                     <Pie
                       data={[{ value: 1000 }]}
                       startAngle={180}
@@ -154,7 +152,7 @@ const Score = () => {
                       fill="#E0E0E0"
                       stroke="none"
                     />
-                    {/* Faixa colorida proporcional ao score */}
+                    {/* Faixa colorida score */}
                     <Pie
                       data={[{ value: resultado.scores?.[0]?.score || 0 }]}
                       startAngle={180}
@@ -172,6 +170,7 @@ const Score = () => {
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
+
                 {/* Agulha e centro */}
                 {(() => {
                   const score = resultado.scores?.[0]?.score || 0;

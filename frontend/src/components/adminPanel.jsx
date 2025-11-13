@@ -119,146 +119,148 @@ const AdminPanel = () => {
   };
 
   return (
-    <motion.div
-      className="edit-profile-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.h2
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+    <div className="admin-panel-wrapper">
+      <motion.div
+        className="edit-profile-container"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
-        Gerenciar Usuários
-      </motion.h2>
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Gerenciar Usuários
+        </motion.h2>
 
-      <motion.table
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-      >
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Nova Senha</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, index) => (
-            <motion.tr
-              key={user.id}
-              variants={tableRowVariants}
-              initial="hidden"
-              animate="visible"
-              custom={index}
-            >
-              <td>{user.nome_usuario}</td>
-              <td>{user.email}</td>
-              <td>
-                <motion.input
-                  type="password"
-                  value={user.senha || ""}
-                  onChange={(e) => handlePasswordChange(user.id, e.target.value)}
-                  placeholder="Digite nova senha"
-                  whileFocus={{ scale: 1.03 }}
-                  transition={{ duration: 0.2 }}
-                />
-              </td>
-              <td>
-                <div className="action-buttons">
-                  <motion.button
-                    className="btn-save"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+        <motion.table
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+        >
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Nova Senha</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <motion.tr
+                key={user.id}
+                variants={tableRowVariants}
+                initial="hidden"
+                animate="visible"
+                custom={index}
+              >
+                <td>{user.nome_usuario}</td>
+                <td>{user.email}</td>
+                <td>
+                  <motion.input
+                    type="password"
+                    value={user.senha || ""}
+                    onChange={(e) => handlePasswordChange(user.id, e.target.value)}
+                    placeholder="Digite nova senha"
+                    whileFocus={{ scale: 1.03 }}
                     transition={{ duration: 0.2 }}
-                    onClick={() => handleSave(user.id, user.senha)}
-                  >
-                    Salvar
-                  </motion.button>
-
-                  <motion.button
-                    className="btn-delete"
-                    onClick={() => showConfirmDelete(user.id)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <FaTrash />
-                  </motion.button>
-                </div>
-              </td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </motion.table>
-
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className={`modal-content ${modalType}`}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <img src={logo} alt="Logo" className="modal-logo" />
-              <h3 className="modal-title">
-                {confirmMode
-                  ? "Confirmação"
-                  : modalType === "success"
-                    ? "Sucesso!"
-                    : "Atenção"}
-              </h3>
-              <p className="modal-text">{modalMessage}</p>
-
-              <div className="modal-buttons">
-                {confirmMode ? (
-                  <>
+                  />
+                </td>
+                <td>
+                  <div className="action-buttons">
                     <motion.button
-                      className="modal-cancel"
+                      className="btn-save"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      onClick={() => handleSave(user.id, user.senha)}
+                    >
+                      Salvar
+                    </motion.button>
+
+                    <motion.button
+                      className="btn-delete"
+                      onClick={() => showConfirmDelete(user.id)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <FaTrash />
+                    </motion.button>
+                  </div>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </motion.table>
+
+        <AnimatePresence>
+          {showModal && (
+            <motion.div
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className={`modal-content ${modalType}`}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <img src={logo} alt="Logo" className="modal-logo" />
+                <h3 className="modal-title">
+                  {confirmMode
+                    ? "Confirmação"
+                    : modalType === "success"
+                      ? "Sucesso!"
+                      : "Atenção"}
+                </h3>
+                <p className="modal-text">{modalMessage}</p>
+
+                <div className="modal-buttons">
+                  {confirmMode ? (
+                    <>
+                      <motion.button
+                        className="modal-cancel"
+                        onClick={() => setShowModal(false)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Cancelar
+                      </motion.button>
+                      <motion.button
+                        className="modal-confirm"
+                        onClick={() => {
+                          handleDeleteConfirmed();
+                          setShowModal(false);
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Confirmar
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.button
+                      className="modal-close"
                       onClick={() => setShowModal(false)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Cancelar
+                      OK
                     </motion.button>
-                    <motion.button
-                      className="modal-confirm"
-                      onClick={() => {
-                        handleDeleteConfirmed();
-                        setShowModal(false);
-                      }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Confirmar
-                    </motion.button>
-                  </>
-                ) : (
-                  <motion.button
-                    className="modal-close"
-                    onClick={() => setShowModal(false)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    OK
-                  </motion.button>
-                )}
-              </div>
+                  )}
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   );
 };
 

@@ -32,7 +32,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser(null); 
+    setUser(null);
     navigate("/login");
   };
 
@@ -77,7 +77,6 @@ export default function Sidebar() {
         </div>
       )}
 
-
       <div className="menu-item">
         <button onClick={() => setOpenServicos(!openServicos)} className="submenu-toggle">
           <ClipboardList size={18} />
@@ -100,11 +99,11 @@ export default function Sidebar() {
             >
               <Link to="/scoreCpf">
                 <FileText size={16} />
-                <span>Consulta por CPF</span>
+                <span>Acerta Mais Positivo</span>
               </Link>
               <Link to="/scoreCnpj">
                 <FileText size={16} />
-                <span>Consulta por CNPJ</span>
+                <span>Define Risco Positivo</span>
               </Link>
             </motion.div>
           )}
@@ -135,6 +134,5 @@ export default function Sidebar() {
         {!isCollapsed && <span>Sair</span>}
       </button>
     </motion.div>
-
   );
 }

@@ -36,19 +36,19 @@
 .user-photo-section {
   display: flex;
   flex-direction: column;
-  align-items: center !important;
-  justify-content: center !important;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   text-align: center;
   gap: 0;
 }
 
 .user-photo-section > * {
-  align-self: center !important;
+  align-self: center;
 }
 
 .user-photo-input {
-  display: none !important;
+  display: none;
 }
  .choose-photo-btn {
   display: inline-block;
@@ -76,17 +76,16 @@
 
 .user-photo-section,
 .user-photo-section * {
-  position: static !important;
+  position: static;
 }
 
 .profile-avatar {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 1rem;
-  margin-top: 0;
-  border: 2px solid #ccc;
+  margin:  auto 8px;
+  border: 2px solid #ad7b3a;
   display: block
 }
 

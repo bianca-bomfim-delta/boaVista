@@ -261,6 +261,7 @@ def update_password():
 
     return jsonify({"message": "Senha atualizada com sucesso"}), 200
 
+
 @app.route("/update-profile", methods=["POST"])
 def update_profile():
     user_id = request.form.get("id")
@@ -323,9 +324,11 @@ def update_profile():
 
 from flask import send_from_directory
 
+
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
 
 @app.route("/delete-user/<int:id>", methods=["DELETE"])
 def delete_user(id):
