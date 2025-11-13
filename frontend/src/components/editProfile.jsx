@@ -129,6 +129,7 @@ const modalVariants = {
 };
 
 return (
+  <div className="edit-profile-wrapper">  
   <motion.div
     className="user-edit-container"
     initial={{ opacity: 0, y: 25 }}
@@ -229,6 +230,7 @@ return (
       )}
     </AnimatePresence>
   </motion.div>
+  </div>
 );
 };
 

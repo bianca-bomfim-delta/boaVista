@@ -83,47 +83,48 @@ const Score = () => {
   };
 
   return (
-    <motion.div
-      className="cpf-score-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-        Acerta Mais Positivo
-      </motion.h1>
+    <div className="score-panel-wrapper">
+      <motion.div
+        className="cpf-score-container"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+          Acerta Mais Positivo
+        </motion.h1>
 
-      <AnimatePresence>
-        {!resultado && (
-          <motion.form
-            key="form"
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4 }}
-          >
-            <input
-              type="text"
-              id="cpf"
-              placeholder="Digite o CPF"
-              value={cpf}
-              onChange={(e) => setCpf(formatCpf(e.target.value))}
-              maxLength={14}
-              required
-            />
-            <motion.button
-              type="submit"
-              className="button-cpf-score"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+        <AnimatePresence>
+          {!resultado && (
+            <motion.form
+              key="form"
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
             >
-              Consultar
-            </motion.button>
-          </motion.form>
-        )}
-      </AnimatePresence>
-      <div>
+              <input
+                type="text"
+                id="cpf"
+                placeholder="Digite o CPF"
+                value={cpf}
+                onChange={(e) => setCpf(formatCpf(e.target.value))}
+                maxLength={14}
+                required
+              />
+              <motion.button
+                type="submit"
+                className="button-cpf-score"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Consultar
+              </motion.button>
+            </motion.form>
+          )}
+        </AnimatePresence>
+        <div>
         </div>
         <AnimatePresence>
           {resultado && (
@@ -261,7 +262,8 @@ const Score = () => {
             </motion.div>
           )}
         </AnimatePresence>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 

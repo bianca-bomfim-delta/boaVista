@@ -109,6 +109,12 @@ html, body {
   font-size: 16px;
 }
 
+.cnpj-panel-wrapper {
+  width: calc(100% - 35px);
+  margin-left: 35px;
+  transition: margin-left 0.3s ease;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;

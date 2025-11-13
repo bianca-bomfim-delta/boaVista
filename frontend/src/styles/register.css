@@ -11,7 +11,7 @@
   padding: 40px 50px;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  width: 400px;
+  width: 350px;
   text-align: center;
 }
 
@@ -67,6 +67,12 @@
 .register-button:hover {
   background-color: #AD7B3A;
   transform: translateY(-1px);
+}
+
+.register-panel-wrapper {
+  width: calc(100% - 35px);
+  margin-left: 35px;
+  transition: margin-left 0.3s ease;
 }
 
 .modal-overlay {

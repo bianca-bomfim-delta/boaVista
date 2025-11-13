@@ -1,4 +1,3 @@
-/* ===== Layout Base ===== */
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -14,7 +13,6 @@
   width: 70px;
 }
 
-/* ===== Conteúdo Principal ===== */
 .main-content {
   flex: 1;
   padding: 2rem 3rem;

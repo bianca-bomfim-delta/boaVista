@@ -238,3 +238,45 @@
 .submenu-toggle:hover {
   color: white;
 }
+
+
+.submenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 32px;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  gap: 8px;
+  opacity: 0.9;
+  transition: background 0.2s, opacity 0.2s;
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+
+.submenu-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+}
+
+.collapsed-submenu {
+  padding-left: 0;
+  align-items: center;
+}
+
+.collapsed-submenu .submenu-link {
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.collapsed-submenu span {
+  display: none;
+}
+

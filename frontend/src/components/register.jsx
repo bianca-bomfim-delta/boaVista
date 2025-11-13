@@ -49,6 +49,7 @@ const Register = () => {
   };
 
   return (
+    <div className="register-panel-wrapper">
     <motion.div
       className="register-wrapper"
       initial={{ opacity: 0, y: 25 }}
@@ -141,6 +142,7 @@ const Register = () => {
         )}
       </AnimatePresence>
     </motion.div>
+  </div>
   );
 };
 

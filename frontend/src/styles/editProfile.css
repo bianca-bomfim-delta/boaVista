@@ -84,7 +84,7 @@
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  margin:  auto 8px;
+  margin: 5px auto 8px;
   border: 2px solid #ad7b3a;
   display: block
 }
@@ -129,6 +129,12 @@
   background-color: #c7924c;
   transform: translateY(-1px);
   box-shadow: 0 3px 6px #ad7b3a40;
+}
+
+.edit-profile-wrapper {
+  width: calc(100% - 35px);
+  margin-left: 35px;
+  transition: margin-left 0.3s ease;
 }
 
 .modal-alert {

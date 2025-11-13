@@ -90,6 +90,7 @@ const ScoreCnpj = () => {
   };
 
   return (
+    <div className="cnpj-panel-wrapper">
     <motion.div
       className="cnpj-score-container"
       variants={containerVariants}
@@ -204,6 +205,7 @@ const ScoreCnpj = () => {
         )}
       </AnimatePresence>
     </motion.div>
+    </div>
   );
 };
 

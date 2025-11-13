@@ -4,7 +4,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  background-color: #F3F6FB;
   color: #081535;
 }
 
@@ -168,6 +168,12 @@ html, body {
   line-height: 1.6;
 }
 
+.score-panel-wrapper {
+  width: calc(100% - 35px);
+  margin-left: 35px;
+  transition: margin-left 0.3s ease;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -221,7 +227,6 @@ html, body {
   transform: translateY(-2px);
 }
 
-/* ===== ANIMAÇÃO ===== */
 @keyframes fadeIn {
   from {
     opacity: 0;
