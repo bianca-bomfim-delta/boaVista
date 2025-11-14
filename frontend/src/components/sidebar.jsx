@@ -19,6 +19,9 @@ import "../styles/sidebar.css";
 export default function Sidebar() {
   const [openServicos, setOpenServicos] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
 
   const { user, setUser } = useUser();
   const navigate = useNavigate();
@@ -36,6 +39,15 @@ export default function Sidebar() {
     navigate("/login");
   };
 
+  useEffect(() => {
+    document.body.className = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === "light" ? "dark" : "light"));
+  };
+
   const sidebarVariants = {
     expanded: { width: "220px", transition: { duration: 0.3 } },
     collapsed: { width: "70px", transition: { duration: 0.3 } },
@@ -43,9 +55,11 @@ export default function Sidebar() {
 
   return (
     <motion.div
-      className={`sidebar ${isCollapsed ? "collapsed" : ""}`}
+      className={`sidebar ${isCollapsed ? "collapsed" : ""} ${theme}`}
       variants={sidebarVariants}
       animate={isCollapsed ? "collapsed" : "expanded"}
+      onMouseEnter={() => setIsCollapsed(false)}
+      onMouseLeave={() => setIsCollapsed(true)}
     >
       <div className="sidebar-header">
         {!isCollapsed && <h2>Delta</h2>}
@@ -128,6 +142,19 @@ export default function Sidebar() {
           </Link>
         </>
       )}
+
+      <button className="theme-switch" onClick={toggleTheme}>
+        <div className="switch-btn">
+          <img
+            src={theme === "light" ? "/light.png" : "/dark.png"}
+            alt="Tema"
+          />
+        </div>
+
+        <span className="switch-label">
+          {theme === "light" ? "Claro" : "Escuro"}
+        </span>
+      </button>
 
       <button className="logout-btn" onClick={handleLogout}>
         <LogOut size={18} />

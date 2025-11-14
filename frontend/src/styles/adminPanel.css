@@ -5,30 +5,30 @@ body, html {
 }
 
 .edit-profile-container {
-  background: #ffffff;
+  background: var(--white);
   padding: 40px 50px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(8, 21, 53, 0.08);
+  box-shadow: var(--shadow-300);
   max-width: 1000px;
   margin: 50px auto;
   width: 100%;
   box-sizing: border-box;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--transition-300) ease-in-out;
 }
 
 .edit-profile-container:hover {
-  box-shadow: 0 6px 25px rgba(8, 21, 53, 0.12);
+  box-shadow: var(--shadow-500);
 }
 
 .edit-profile-container h2 {
-  color: #081535;
+  color: var(--text-1);
   font-size: 1.8rem;
   font-weight: 600;
   text-align: center;
   letter-spacing: 0.5px;
   margin-top: 10px;
   margin-bottom: 15px;
-  border-bottom: 2px solid #AD7B3A;
+  border-bottom: 2px solid var(--primary);
   display: inline-block;
   padding-bottom: 8px;
   overflow: hidden;
@@ -56,8 +56,8 @@ th, td {
 }
 
 th {
-  background-color: #081535;
-  color: #fff;
+  background-color: var(--text-1);
+  color: var(--white);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -82,14 +82,14 @@ select {
   box-sizing: border-box;
   color: #333;
   background-color: #fafbff;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow var(--transition-300) ease-in-out;
 }
 
 input:focus,
 select:focus {
-  border-color: #AD7B3A;
+  border-color: var(--primary);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(173, 123, 58, 0.25);
+  box-shadow: var(--shadow-300);
 }
 
 .action-buttons {
@@ -100,21 +100,21 @@ select:focus {
 }
 
 .btn-save {
-  background-color: #081535;
-  color: #fff;
+  background-color: var(--text-1);
+  color: var(--white);
   border: none;
   padding: 8px 18px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.25s ease;
+  transition: var(--transition-300) ease-in-out;
 }
 
 .btn-save:hover {
-  background-color: #081535;
+  background-color: var(--text-1);
   transform: translateY(-1px);
-  box-shadow: 0 3px 6px #ad7b3a40;
+  box-shadow: var(--shadow-500);
 }
 
 .btn-delete {
@@ -124,7 +124,7 @@ select:focus {
   color: #dc2626;
   padding: 6px;
   border-radius: 6px;
-  transition: background-color 0.2s ease;
+  transition: var(--transition-300) ease-in-out;
   font-size: 18px;
 }
 
@@ -138,10 +138,10 @@ select:focus {
 }
 
 .section h3 {
-  color: #081535;
+  color: var(--text-1);
   font-size: 1.2rem;
   margin-bottom: 15px;
-  border-left: 4px solid #AD7B3A;
+  border-left: 4px solid var(--primary);
   padding-left: 10px;
 }
 
@@ -169,17 +169,17 @@ select:focus {
 }
 
 .modal-cancel {
-  background-color: #AD7B3A;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
 }
 
 .modal-cancel:hover {
-  background-color: #AD7B3A;
+  background-color: var(--primary-light);
 }
 
 .modal-confirm {
   background-color: #0b1c3a;
-  color: white;
+  color: var(--white);
 }
 
 .modal-confirm:hover {
@@ -198,11 +198,11 @@ select:focus {
 }
 
 .modal-content {
-  background: #fff;
-  color: #1e293b;
+  background: var(--white);
+  color: var(--text-1);
   padding: 2rem 2.2rem;
   border-radius: 16px;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-300);
   text-align: center;
   width: 300px;
   height: 200px;
@@ -238,18 +238,18 @@ select:focus {
 }
 
 .modal-close {
-  background: linear-gradient(90deg, #AD7B3A, #b17a32);
-  color: #fff;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: var(--white);
   border: none;
   border-radius: 8px;
   padding: 0.6rem 1.4rem;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.25s ease;
+  transition: var(--transition-300) ease-in-out;
 }
 
 .modal-close:hover {
-  background: linear-gradient(90deg, #AD7B3A, #b17a32);
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
   transform: translateY(-2px);
 }
 

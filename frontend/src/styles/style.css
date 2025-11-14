@@ -1,52 +1,55 @@
+/* CLARO */
+
+body.light {
+  --primary: #ad7b3a; 
+  --primary-light: #C18A43;
+  --sidebar-background: #081535;
+  --sidebar-text: #fff;
+  --text-1: #081535;
+  --text-2: #f1f1f1;
+  --white: #ffffff;
+  --background: #f5f5f5;
+
+  --shadow-300: 0 3px 5px rgba(0, 0, 0, 0.15);
+  --shadow-500: 0 5px 10px rgba(0, 0, 0, 0.25);
+
+  --transition-300: all 300ms ease-in-out;
+  --transition-500: all 500ms ease-in-out;
+}
+
+/* ESCURO */
+
+body.dark {
+  --primary: #ad7b3a;
+  --primary-light: #C18A43;
+  --sidebar-background: #FFFFFF33;
+  --sidebar-text: #fff;
+  --text-1: #ffffff;
+  --text-2: #bdbdbd;
+  --white: #fff;   /* #1a1a1a  mudar aqui dps*/
+  --background: #081535;
+
+  --shadow-300: 0 3px 5px rgba(255, 255, 255, 0.1);
+  --shadow-500: 0 5px 10px rgba(255, 255, 255, 0.15);
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #081535;
-}
-
-.app-container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-}
-
-.sidebar {
-  width: 220px;
-  background-color: #081535;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-}
-
-.main-content {
-  flex: 1;
-  margin-left: 220px;
-  padding: 30px 40px;
-  background-color: #f5f5f5;
-  overflow-y: auto;
-  height: 100vh;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--text-1);
 }
 
 h1, h2, h3 {
-  color: #081535;
+  color: var(--text-1);
 }
 
 button {
-  background-color: #AD7B3A;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
@@ -55,5 +58,5 @@ button {
 }
 
 button:hover {
-  background-color: #c7924c;
+  background-color: var(--primary-light);
 }

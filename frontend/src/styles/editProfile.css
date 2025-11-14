@@ -1,28 +1,28 @@
 .user-edit-container {
-  background: #ffffff;
+  background: var(--white);
   padding: 40px 50px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px #08153514;
+  box-shadow: var(--shadow-300);
   max-width: 600px;
   margin: 50px auto;
   width: 100%;
   box-sizing: border-box;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--transition-300) ease-in-out;
 }
 
 .user-edit-container:hover {
-  box-shadow: 0 6px 25px #0815351f;
+  box-shadow: var(--shadow-500);
 }
 
 .user-edit-title {
-  color: #081535;
+  color: var(--text-1);
   font-size: 1.8rem;
   font-weight: 600;
   text-align: center;
   letter-spacing: 0.5px;
   margin-top: 10px;
   margin-bottom: 15px;
-  border-bottom: 2px solid #AD7B3A;
+  border-bottom: 2px solid var(--primary);
   display: inline-block;
   padding-bottom: 8px;
 }
@@ -57,7 +57,7 @@
   background-color: #f7f8fc;
   border: 1px solid #ccd2e3;
   border-radius: 6px;
-  color: #081535;
+  color: var(--text-1);
   font-size: 0.95rem;
   cursor: pointer;
   transition: background-color 0.18s, border-color 0.18s, transform 0.12s;
@@ -70,7 +70,7 @@
 .choose-photo-btn:hover,
 .choose-photo-btn:focus {
   background-color: #f0f1f7;
-  border-color: #ad7b3a;
+  border-color: var(--primary);
   transform: translateY(-1px);
 }
 
@@ -85,13 +85,13 @@
   border-radius: 50%;
   object-fit: cover;
   margin: 5px auto 8px;
-  border: 2px solid #ad7b3a;
+  border: 2px solid var(--primary);
   display: block
 }
 
 .user-label {
   font-weight: 500;
-  color: #081535;
+  color: var(--text-1);
   margin-bottom: -2px;
 }
 
@@ -104,37 +104,37 @@
   box-sizing: border-box;
   color: #333;
   background-color: #fafbff;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow var(--transition-300) ease-in-out;
 }
 
 .user-input:focus {
-  border-color: #AD7B3A;
+  border-color: var(--primary);
   outline: none;
-  box-shadow: 0 0 0 2px #ad7b3a40;
+  box-shadow: var(--shadow-300);
 }
 
 .user-save-btn {
-  background-color: #AD7B3A;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
   border: none;
   padding: 0.75rem;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  transition: all 0.25s ease;
+  transition: var(--transition-300) ease-in-out;
 }
 
 .user-save-btn:hover {
-  background-color: #c7924c;
+  background-color: var(--primary-light);
   transform: translateY(-1px);
-  box-shadow: 0 3px 6px #ad7b3a40;
+  box-shadow: var(--shadow-300);
 }
 
 .edit-profile-wrapper {
   width: calc(100% - 35px);
   margin-left: 35px;
-  transition: margin-left 0.3s ease;
+  transition: margin-left var(--transition-300) ease-in-out;
 }
 
 .modal-alert {
@@ -144,10 +144,10 @@
   transform: translateX(-50%);
   padding: 12px 24px;
   border-radius: 12px;
-  color: white;
+  color: var(--white);
   font-weight: 500;
   z-index: 10;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-300);
   backdrop-filter: blur(6px);
   max-width: 360px;
   text-align: center;

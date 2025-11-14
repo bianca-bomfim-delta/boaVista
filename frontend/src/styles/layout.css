@@ -22,12 +22,9 @@
   transition: margin-left 0.3s ease, padding 0.3s ease;
 }
 
-/* sidebar recolhida */
 .sidebar.collapsed ~ .main-content {
   margin-left: 70px;
 }
-
-/* ===== Responsividade ===== */
 
 /* Tablets e telas médias */
 @media (max-width: 992px) {
