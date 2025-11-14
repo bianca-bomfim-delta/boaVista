@@ -8,38 +8,6 @@ html, body {
   color: var(--text-1);
 }
 
-.app-container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-}
-
-.sidebar {
-  width: 220px;
-  background-color: var(--text-1);
-  color: var(--white);
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-}
-
-.main-content {
-  flex: 1;
-  margin-left: 220px;
-  padding: 40px 60px;
-  background-color: var(--background);
-  overflow-y: auto;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .cnpj-score-container {
   display: flex;
   flex-direction: column;
