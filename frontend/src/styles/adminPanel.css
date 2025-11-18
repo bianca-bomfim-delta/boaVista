@@ -57,7 +57,7 @@ th, td {
 
 th {
   background-color: var(--text-1);
-  color: var(--white);
+  color: var(--text-4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -101,7 +101,7 @@ select:focus {
 
 .btn-save {
   background-color: var(--text-1);
-  color: var(--white);
+  color: var(--text-4);
   border: none;
   padding: 8px 18px;
   border-radius: 6px;
@@ -290,6 +290,7 @@ select:focus {
   th, td {
     font-size: 14px;
     padding: 10px 12px;
+    color: var(--text-4);
   }
 }
 

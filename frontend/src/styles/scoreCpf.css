@@ -41,7 +41,7 @@ html, body {
 
 .button-cpf-score {
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--sidebar-text);
   border: none;
   padding: 12px 22px;
   border-radius: 6px;

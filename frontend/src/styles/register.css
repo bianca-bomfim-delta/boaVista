@@ -54,7 +54,7 @@
 
 .register-button {
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--sidebar-text);
   border: none;
   border-radius: 6px;
   padding: 12px 0;

@@ -110,7 +110,7 @@ html, body {
 
 .login-box button {
   background-color: var(--primary-light);
-  color: var(--white);
+  color: var(--sidebar-text);
   font-weight: 600;
   padding: 0.9rem;
   border: none;

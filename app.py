@@ -1,17 +1,22 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import psycopg2
 import xml.etree.ElementTree as ET
+import requests
 import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
+# ----------------------
+# Configurações do banco
+# ----------------------
 DB_HOST = "10.174.1.116"
 DB_NAME = "score"
 DB_USER = "postgres"
 DB_PASS = "XwrNUm9YshZsdQxQ"
-
 
 def get_db_connection():
     return psycopg2.connect(
@@ -21,19 +26,23 @@ def get_db_connection():
         password=DB_PASS
     )
 
-
+# ----------------------
+# Uploads
+# ----------------------
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-
+# ----------------------
+# Rotas básicas
+# ----------------------
 @app.route("/")
 def home():
-    return "Teste do flask"
+    return "Teste do Flask"
 
-
+# ----------------------
+# Login
+# ----------------------
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -43,24 +52,22 @@ def login():
     if not email or not senha:
         return jsonify({"error": "Email e senha são obrigatórios"}), 400
 
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT id, nome_usuario, email, foto, administrador
-        FROM usuario
-        WHERE email = %s AND senha = %s
-    """, (email, senha))
-    user = cur.fetchone()
-    cur.close()
-    conn.close()
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, nome_usuario, email, foto, administrador
+            FROM usuario
+            WHERE email = %s AND senha = %s
+        """, (email, senha))
+        user = cur.fetchone()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        return jsonify({"error": "Erro no banco de dados", "detalhes": str(e)}), 500
 
     if user:
-        user_id = user[0]
-        nome = user[1]
-        email = user[2]
-        foto = user[3]
-        administrador = user[4]  
-
+        user_id, nome, email, foto, administrador = user
         return jsonify({
             "id": user_id,
             "nome_usuario": nome,
@@ -71,7 +78,9 @@ def login():
     else:
         return jsonify({"error": "Credenciais inválidas"}), 401
 
-
+# ----------------------
+# Register
+# ----------------------
 @app.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -82,29 +91,32 @@ def register():
     if not nome or not email or not senha:
         return jsonify({"error": "Nome, email e senha são obrigatórios"}), 400
 
-    conn = get_db_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
 
-    cur.execute("SELECT * FROM usuario WHERE email = %s", (email,))
-    if cur.fetchone():
+        cur.execute("SELECT * FROM usuario WHERE email = %s", (email,))
+        if cur.fetchone():
+            cur.close()
+            conn.close()
+            return jsonify({"error": "Email já cadastrado"}), 409
+
+        imagem_padrao = "default-avatar.jpeg"
+
+        cur.execute(
+            """
+            INSERT INTO usuario (nome_usuario, email, senha, foto)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id, nome_usuario, email, foto
+            """,
+            (nome, email, senha, imagem_padrao)
+        )
+        new_user = cur.fetchone()
+        conn.commit()
         cur.close()
         conn.close()
-        return jsonify({"error": "Email já cadastrado"}), 409
-
-    imagem_padrao = "default-avatar.jpeg"
-
-    cur.execute(
-        """
-        INSERT INTO usuario (nome_usuario, email, senha, foto)
-        VALUES (%s, %s, %s, %s)
-        RETURNING id, nome_usuario, email, foto
-        """,
-        (nome, email, senha, imagem_padrao)
-    )
-    new_user = cur.fetchone()
-    conn.commit()
-    cur.close()
-    conn.close()
+    except Exception as e:
+        return jsonify({"error": "Erro no banco de dados", "detalhes": str(e)}), 500
 
     return jsonify({
         "message": "Usuário cadastrado com sucesso",
@@ -116,63 +128,116 @@ def register():
         }
     }), 201
 
- 
+# ----------------------
+# Fetch Score (CPF)
+# ----------------------
 @app.route("/fetch-score", methods=["POST"])
 def fetch_score():
-    data = request.get_json()
-    cpf = data.get("cpf")
+    cpf = request.json.get("cpf", "").replace(".", "").replace("-", "")
+    usuario = "01338101"
+    senha = "YH82TV"
 
-    # 🔸 Simulação da resposta XML da API real
-    xml_response = f"""
-    <consulta>
-        <nome>MICHAEL SANTOS GOMES</nome>
-        <cpf>{cpf}</cpf>
-        <score>275</score>
-        <recomendacao>Reprovar</recomendacao>
-        <textoRecomendacao>Essa sugestão ocorre quando o documento se enquadra em ao menos um dos cenários abaixo...</textoRecomendacao>
-        <probabilidadeInadimplencia>18</probabilidadeInadimplencia>
-        <rendaPresumida>R$ 1.401 até R$ 2.000</rendaPresumida>
-        <pontualidadePagamentos>B</pontualidadePagamentos>
-        <contratosRecentes>C</contratosRecentes>
-        <faturasAtraso>D</faturasAtraso>
-        <enderecos>
-            <endereco>
-                <logradouro>R FLOR DA REDENCAO, 513</logradouro>
-                <bairro>VL JACUI</bairro>
-                <cidade>SAO PAULO</cidade>
-                <cep>08050-060</cep>
-            </endereco>
-        </enderecos>
-    </consulta>
-    """
+    xml_body = f"""<?xml version="1.0" encoding="UTF-8"?>
+<acertaPositivoContratoEntrada xmlns="http://boavistaservicos.com.br/familia/acerta/positivo/pf">
+    <usuario>{usuario}</usuario>
+    <senha>{senha}</senha>
+    <cpf>{cpf}</cpf>
+    <tipoCredito>CC</tipoCredito>
+</acertaPositivoContratoEntrada>
+"""
 
-    # 🔸 Converter XML → JSON (mantendo formato do frontend)
-    root = ET.fromstring(xml_response)
-
-    resultado = {
-        "nome": root.findtext("nome"),
-        "cpf": root.findtext("cpf"),
-        "scores": [{"score": int(root.findtext("score") or 0)}],
-        "recomendacao": root.findtext("recomendacao"),
-        "textoRecomendacao": root.findtext("textoRecomendacao"),
-        "probabilidadeInadimplencia": int(root.findtext("probabilidadeInadimplencia") or 0),
-        "rendaPresumida": root.findtext("rendaPresumida"),
-        "pontualidadePagamentos": root.findtext("pontualidadePagamentos"),
-        "contratosRecentes": root.findtext("contratosRecentes"),
-        "faturasAtraso": root.findtext("faturasAtraso"),
-        "enderecos": [
-            {
-                "logradouro": root.findtext(".//enderecos/endereco/logradouro"),
-                "bairro": root.findtext(".//enderecos/endereco/bairro"),
-                "cidade": root.findtext(".//enderecos/endereco/cidade"),
-                "cep": root.findtext(".//enderecos/endereco/cep"),
-            }
-        ],
-        "mensagem": "Consulta simulada (XML convertido para JSON)."
+    url = "https://acerta.bvsnet.com.br/FamiliaAcertaPositivoPFXmlWeb/essencial/v4"
+    headers = {
+        "Content-Type": "application/xml",
+        "Accept": "application/xml"
     }
 
-    return jsonify(resultado)
+    try:
+        response = requests.post(url, data=xml_body, headers=headers)
+        response.raise_for_status()
+        xml_response = response.text
 
+        ns = {
+            "ns": "http://boavistaservicos.com.br/familia/acerta/positivo/pf",
+            "tr_500": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/identificacao",
+            "tr_501": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/localizacao",
+            "tr_601": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/score_classificacao_varios_modelos",
+            "tr_804": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/status_consumidor",
+            "tr_700": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/nota_comportamento"
+        }
+
+        root = ET.fromstring(xml_response)
+
+        # Nome e CPF
+        nome_node = root.find(".//tr_500:nome", ns)
+        documento_node = root.find(".//tr_500:documento", ns)
+        nome = nome_node.text if nome_node is not None else None
+        cpf_ret = documento_node.text if documento_node is not None else None
+
+        # Mensagem
+        mensagem_node = root.find(".//tr_804:mensagem", ns)
+        mensagem = mensagem_node.text if mensagem_node is not None else None
+
+        # Scores (evitando duplicações)
+        scores_nodes = root.findall(".//tr_601:score", ns)
+        scores_seen = set()
+        scores = []
+        for s in scores_nodes:
+            if s.text and s.text not in scores_seen:
+                scores.append({"score": int(s.text)})
+                scores_seen.add(s.text)
+        score_principal = scores[0]["score"] if scores else None
+
+        # Renda presumida
+        renda_presumida_node = root.find(".//tr_601:texto2", ns)
+        renda_presumida = renda_presumida_node.text if renda_presumida_node is not None else None
+
+        # Endereço (somente primeiro)
+        enderecos = []
+        for loc in root.findall(".//tr_501:localizacao", ns):
+            enderecos.append({
+                "logradouro": loc.findtext("tr_501:nomeLogradouro", default=None, namespaces=ns),
+                "bairro": loc.findtext("tr_501:bairro", default=None, namespaces=ns),
+                "cidade": loc.findtext("tr_501:cidade", default=None, namespaces=ns),
+                "cep": loc.findtext("tr_501:cep", default=None, namespaces=ns)
+            })
+        endereco_principal = enderecos[0] if enderecos else {}
+
+        # Comportamento contratos/faturas
+        contratos_recent_node = root.find(".//tr_700:nota_comportamento_contratos_recentes/tr_700:nota", ns)
+        contratos_recent = contratos_recent_node.text if contratos_recent_node is not None else None
+
+        faturas_atraso_node = root.find(".//tr_700:nota_comportamento_fatura_em_atraso/tr_700:nota", ns)
+        faturas_atraso = faturas_atraso_node.text if faturas_atraso_node is not None else None
+
+        return jsonify({
+            "nome": nome,
+            "cpf": cpf_ret,
+            "mensagem": mensagem,
+            "score": score_principal,
+            "scores": scores,
+            "probabilidadeInadimplencia": None,
+            "rendaPresumida": renda_presumida,
+            "recomendacao": None,
+            "textoRecomendacao": None,
+            "pontualidadePagamentos": None,
+            "contratosRecentes": contratos_recent,
+            "faturasAtraso": faturas_atraso,
+            "logradouro": endereco_principal.get("logradouro"),
+            "bairro": endereco_principal.get("bairro"),
+            "cidade": endereco_principal.get("cidade"),
+            "cep": endereco_principal.get("cep"),
+            "enderecos": enderecos
+        })
+
+    except requests.exceptions.HTTPError as err:
+        return jsonify({
+            "erro": "A API retornou erro HTTP",
+            "status_code": response.status_code,
+            "detalhes": str(err)
+        }), 500
+    except Exception as e:
+        return jsonify({"erro": "Falha ao processar XML", "detalhes": str(e)}), 500
 
 @app.route("/fetch-score-cnpj", methods=["POST"])
 def fetch_score_cnpj():

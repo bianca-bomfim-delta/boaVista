@@ -113,9 +113,12 @@
   transition: color 0.2s, background-color var(--transition-300) ease-in-out;
 }
 
-.sidebar .menu-link:hover,
-.sidebar .submenu a:hover,
 .sidebar .submenu-toggle:hover {
+  color: var(--sidebar-text)
+}
+
+.sidebar .menu-link:hover,
+.sidebar .submenu a:hover {
   color: var(--primary);
 }
 

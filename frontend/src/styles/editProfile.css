@@ -3,7 +3,7 @@
   padding: 40px 50px;
   border-radius: 12px;
   box-shadow: var(--shadow-300);
-  max-width: 600px;
+  max-width: 550px;
   margin: 50px auto;
   width: 100%;
   box-sizing: border-box;
@@ -57,7 +57,7 @@
   background-color: #f7f8fc;
   border: 1px solid #ccd2e3;
   border-radius: 6px;
-  color: var(--text-1);
+  color: var(--text-3);
   font-size: 0.95rem;
   cursor: pointer;
   transition: background-color 0.18s, border-color 0.18s, transform 0.12s;
@@ -115,7 +115,7 @@
 
 .user-save-btn {
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--sidebar-text);
   border: none;
   padding: 0.75rem;
   border-radius: 8px;

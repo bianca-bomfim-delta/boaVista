@@ -11,6 +11,7 @@ const Score = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("");
 
+  // Formatador do CPF
   const formatCpf = (value) => {
     let v = value.replace(/\D/g, "").slice(0, 11);
     v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -50,7 +51,7 @@ const Score = () => {
       if (response.ok) {
         setResultado(data);
       } else {
-        showAlert(data.error || "Erro na consulta.");
+        showAlert(data.erro || "Erro na consulta.");
         setResultado(null);
       }
     } catch (error) {
@@ -72,8 +73,6 @@ const Score = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
-
-  const COLORS = ["#00C49F", "#FFBB28", "#FF8042", "#FF4444"];
 
   const getColorByScore = (score) => {
     if (score < 200) return "#FF4444";
@@ -124,8 +123,7 @@ const Score = () => {
             </motion.form>
           )}
         </AnimatePresence>
-        <div>
-        </div>
+
         <AnimatePresence>
           {resultado && (
             <motion.div
@@ -137,7 +135,7 @@ const Score = () => {
             >
               <h2>Resultado da Consulta</h2>
 
-              {/* Velocímetro */}
+              {/* ===== VELOCÍMETRO ===== */}
               <div className="gauge-container">
                 <ResponsiveContainer width="100%" height={180}>
                   <PieChart>
@@ -153,28 +151,24 @@ const Score = () => {
                       fill="#E0E0E0"
                       stroke="none"
                     />
-                    {/* Faixa colorida score */}
                     <Pie
-                      data={[{ value: resultado.scores?.[0]?.score || 0 }]}
-                      startAngle={180}
-                      endAngle={
-                        180 - ((resultado.scores?.[0]?.score || 0) / 1000) * 180
-                      }
+                      data={[{ value: Number(resultado.score) || 0 }]}
                       cx="50%"
                       cy="100%"
                       innerRadius={60}
                       outerRadius={80}
-                      dataKey="value"
+                      startAngle={180}
+                      endAngle={180 - ((Number(resultado.score) || 0) / 1000) * 180}
                       stroke="none"
                     >
-                      <Cell fill={getColorByScore(resultado.scores?.[0]?.score || 0)} />
+                      <Cell fill={getColorByScore(Number(resultado.score) || 0)} />
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
 
-                {/* Agulha e centro */}
+                {/* AGULHA */}
                 {(() => {
-                  const score = resultado.scores?.[0]?.score || 0;
+                  const score = Number(resultado.score) || 0;
                   const angle = -90 + (score / 1000) * 180;
 
                   return (
@@ -188,12 +182,12 @@ const Score = () => {
                   );
                 })()}
 
-
                 <div className="gauge-score">
-                  {resultado.scores?.[0]?.score || "—"}
+                  {resultado.score || "—"}
                 </div>
               </div>
 
+              {/* ===== INFORMAÇÕES ===== */}
               <div className="score-info">
                 <h2>Identificação</h2>
 
@@ -202,23 +196,18 @@ const Score = () => {
                 <p><strong>Score:</strong> {resultado.score || "—"}</p>
                 <p><strong>Recomendação:</strong> {resultado.recomendacao || "—"}</p>
                 <p><strong>Texto da Recomendação:</strong> {resultado.textoRecomendacao || "—"}</p>
-                <p><strong>Probabilidade de Inadimplência:</strong> {resultado.probabilidadeInadimplencia ? `${resultado.probabilidadeInadimplencia}%` : "—"}</p>
+                <p>
+                  <strong>Probabilidade de Inadimplência:</strong>{" "}
+                  {resultado.probabilidadeInadimplencia
+                    ? `${resultado.probabilidadeInadimplencia}%`
+                    : "—"}
+                </p>
                 <p><strong>Renda Presumida:</strong> {resultado.rendaPresumida || "—"}</p>
                 <p><strong>Pontualidade nos Pagamentos:</strong> {resultado.pontualidadePagamentos || "—"}</p>
                 <p><strong>Contratos Recentes:</strong> {resultado.contratosRecentes || "—"}</p>
                 <p><strong>Faturas em Atraso:</strong> {resultado.faturasAtraso || "—"}</p>
 
-                {resultado.enderecos && resultado.enderecos.length > 0 && (
-                  <div>
-                    <h2>Localização</h2>
-                    <p><strong>Logradouro:</strong> {resultado.enderecos[0].logradouro || "—"}</p>
-                    <p><strong>Bairro:</strong> {resultado.enderecos[0].bairro || "—"}</p>
-                    <p><strong>Cidade:</strong> {resultado.enderecos[0].cidade || "—"}</p>
-                    <p><strong>CEP:</strong> {resultado.enderecos[0].cep || "—"}</p>
-                  </div>
-                )}
-
-                <p><strong>Mensagem:</strong> {resultado.mensagem || "Consulta simulada de score."}</p>
+                <p><strong>Mensagem:</strong> {resultado.mensagem || "—"}</p>
               </div>
 
               <motion.button
@@ -234,6 +223,7 @@ const Score = () => {
           )}
         </AnimatePresence>
 
+        {/* ===== MODAL ===== */}
         <AnimatePresence>
           {showModal && (
             <motion.div

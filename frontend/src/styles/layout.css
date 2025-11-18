@@ -30,36 +30,7 @@
 @media (max-width: 992px) {
   .main-content {
     margin-left: 180px;
-    padding: 30px;
-  }
-}
-
-/* Telas pequenas / mobile */
-@media (max-width: 768px) {
-  .app-container {
-    flex-direction: column; 
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-  }
-
-  .main-content {
-    margin-left: 0;
     padding: 20px;
   }
 }
 
-/* (celulares pequenos) */
-@media (max-width: 480px) {
-  .main-content {
-    padding: 15px;
-  }
-}
