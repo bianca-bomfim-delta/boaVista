@@ -2,7 +2,7 @@
   background: var(--white);
   padding: 40px 50px;
   border-radius: 12px;
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
   max-width: 550px;
   margin: 50px auto;
   width: 100%;
@@ -11,7 +11,7 @@
 }
 
 .user-edit-container:hover {
-  box-shadow: var(--shadow-500);
+  box-shadow: var(--shadow-200);
 }
 
 .user-edit-title {
@@ -110,7 +110,7 @@
 .user-input:focus {
   border-color: var(--primary);
   outline: none;
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
 }
 
 .user-save-btn {
@@ -128,38 +128,14 @@
 .user-save-btn:hover {
   background-color: var(--primary-light);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
 }
 
 .edit-profile-wrapper {
-  width: calc(100% - 35px);
-  margin-left: 35px;
-  transition: margin-left var(--transition-300) ease-in-out;
-}
-
-.modal-alert {
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 24px;
-  border-radius: 12px;
-  color: var(--white);
-  font-weight: 500;
-  z-index: 10;
-  box-shadow: var(--shadow-300);
-  backdrop-filter: blur(6px);
-  max-width: 360px;
-  text-align: center;
-}
-
-.modal-alert.success {
-  background: linear-gradient(135deg, #102547bd, #0B1C3A);
-}
-
-.modal-alert.error,
-.modal-alert.info {
-  background: linear-gradient(135deg, #836337b4, #946b39);
+  margin-left: 20px;
+  width: calc(100% - 20px); 
+  padding: 0rem;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {

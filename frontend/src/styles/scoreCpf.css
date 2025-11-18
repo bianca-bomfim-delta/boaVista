@@ -59,7 +59,7 @@ html, body {
   background-color: var(--white);
   border-radius: 12px;
   padding: 35px 40px;
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
   margin-top: 40px;
   max-width: 900px;
   width: 100%;
@@ -119,7 +119,7 @@ html, body {
   background: #333;
   border-radius: 50%;
   transform: translate(-50%, 50%);
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
 }
 
 .score-info {
@@ -137,74 +137,12 @@ html, body {
 }
 
 .score-panel-wrapper {
-  width: calc(100% - 35px);
-  margin-left: 35px;
-  transition: margin-left var(--transition-300) ease-in-out;
+  margin-left: 20px;
+  width: calc(100% - 20px); 
+  padding: 0rem;
+  box-sizing: border-box;
 }
 
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(4px);
-}
-
-.modal-content {
-  background: var(--white);
-  color: #1e293b;
-  padding: 2rem 2.2rem;
-  border-radius: 16px;
-  box-shadow: var(--shadow-300);
-  text-align: center;
-  width: 300px;
-  height: 200px;
-  max-width: 90%;
-  position: relative;
-  animation: fadeIn 0.4s ease;
-}
-
-.modal-logo {
-  width: 60px;
-  margin: 2px auto 0px;
-}
-
-.modal-content.success {
-  border-top: 5px solid #16a34a;
-}
-
-.modal-content.error {
-  border-top: 5px solid #dc2626;
-}
-
-.modal-close {
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1.4rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: var(--transition-300) ease-in-out;
-}
-
-.modal-close:hover {
-  transform: translateY(-2px);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
 @media (max-width: 768px) {
   .main-content {

@@ -1,0 +1,118 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  background: var(--adminPanel);
+  color: var(--text-1);
+  padding: 2rem 2.2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow-200);
+  text-align: center;
+  width: 300px;
+  height: auto;
+  max-width: 90%;
+  position: relative;
+  animation: fadeIn 0.4s ease;
+}
+
+.success {
+  border-top: 5px solid #16a34a;
+}
+
+.error {
+  border-top: 5px solid #dc2626;
+}
+
+.warning {
+  border-top: 5px solid #ad7b3a;
+}
+
+.info {
+  border-top: 5px solid #3b82f6;
+}
+
+.logo {
+  width: 60px;
+  margin: 2px auto 0px;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-1);
+  line-height: 1.4;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  color: var(--sidebar-text);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.cancel,
+.confirm,
+.ok {
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--sidebar-text);
+  transition: background 0.3s ease;
+}
+
+.ok {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: var(--sidebar-text);
+  font-weight: 500;
+}
+
+.ok:hover {
+  transform: translateY(-2px);
+}
+
+.cancel {
+  background-color: var(--primary);
+  color: var(--sidebar-text);
+}
+
+.cancel:hover {
+  background-color: var(--primary-light);
+}
+
+.confirm {
+  background-color: #0b1c3a;
+  color: var(--sidebar-text);
+}
+
+.confirm:hover {
+  background-color: #1b2e53;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -49,8 +49,14 @@ export default function Sidebar() {
   };
 
   const sidebarVariants = {
-    expanded: { width: "220px", transition: { duration: 0.3 } },
-    collapsed: { width: "70px", transition: { duration: 0.3 } },
+    expanded: {
+      width: "220px",
+      transition: { duration: 0.1, ease: "linear" }
+    },
+    collapsed: {
+      width: "70px",
+      transition: { duration: 0.1, ease: "linear" }
+    },
   };
 
   return (
@@ -63,9 +69,10 @@ export default function Sidebar() {
     >
       <div className="sidebar-header">
         {!isCollapsed && <h2>Delta</h2>}
-        <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <button className="toggle-btn" disabled>
           {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
+
       </div>
 
       {user && (
@@ -143,23 +150,25 @@ export default function Sidebar() {
         </>
       )}
 
-      <button className="theme-switch" onClick={toggleTheme}>
-        <div className="switch-btn">
-          <img
-            src={theme === "light" ? "/light.png" : "/dark.png"}
-            alt="Tema"
-          />
-        </div>
+      <div className="sidebar-footer">
+        <button className="theme-switch" onClick={toggleTheme}>
+          <div className="switch-btn">
+            <img
+              src={theme === "light" ? "/light.png" : "/dark.png"}
+              alt="Tema"
+            />
+          </div>
 
-        <span className="switch-label">
-          {theme === "light" ? "Claro" : "Escuro"}
-        </span>
-      </button>
+          <span className="switch-label">
+            {theme === "light" ? "Claro" : "Escuro"}
+          </span>
+        </button>
 
-      <button className="logout-btn" onClick={handleLogout}>
-        <LogOut size={18} />
-        {!isCollapsed && <span>Sair</span>}
-      </button>
+        <button className="logout-btn" onClick={handleLogout}>
+          <LogOut size={18} />
+          {!isCollapsed && <span>Sair</span>}
+        </button>
+      </div>
     </motion.div>
   );
 }

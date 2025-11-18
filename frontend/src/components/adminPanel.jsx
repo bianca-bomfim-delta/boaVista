@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/adminPanel.css";
 import { FaTrash } from "react-icons/fa";
-import logo from "../images/logo.png";
+import NotificationModal from "../components/notificationModal/notificationModal";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -196,69 +196,15 @@ const AdminPanel = () => {
           </tbody>
         </motion.table>
 
-        <AnimatePresence>
-          {showModal && (
-            <motion.div
-              className="modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className={`modal-content ${modalType}`}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                <img src={logo} alt="Logo" className="modal-logo" />
-                <h3 className="modal-title">
-                  {confirmMode
-                    ? "Confirmação"
-                    : modalType === "success"
-                      ? "Sucesso!"
-                      : "Atenção"}
-                </h3>
-                <p className="modal-text">{modalMessage}</p>
+        <NotificationModal
+          show={showModal}
+          type={modalType}
+          mode={confirmMode ? "confirm" : "ok"}
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+          onConfirm={handleDeleteConfirmed}
+        />
 
-                <div className="modal-buttons">
-                  {confirmMode ? (
-                    <>
-                      <motion.button
-                        className="modal-cancel"
-                        onClick={() => setShowModal(false)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Cancelar
-                      </motion.button>
-                      <motion.button
-                        className="modal-confirm"
-                        onClick={() => {
-                          handleDeleteConfirmed();
-                          setShowModal(false);
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Confirmar
-                      </motion.button>
-                    </>
-                  ) : (
-                    <motion.button
-                      className="modal-close"
-                      onClick={() => setShowModal(false)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      OK
-                    </motion.button>
-                  )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   );

@@ -105,7 +105,7 @@ html, body {
 
 .login-box input:focus {
   border-color: var(--text-1);
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
 }
 
 .login-box button {
@@ -133,7 +133,7 @@ html, body {
   color: var(--white);
   font-weight: 500;
   z-index: 10;
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
   backdrop-filter: blur(6px);
   max-width: 360px;
   text-align: center;

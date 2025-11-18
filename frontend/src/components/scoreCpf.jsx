@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import "../styles/scoreCpf.css";
-import logo from "../images/logo.png";
+import NotificationModal from "../components/notificationModal/notificationModal";
 
 const Score = () => {
   const [cpf, setCpf] = useState("");
   const [resultado, setResultado] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState("info");
   const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState("");
 
-  // Formatador do CPF
   const formatCpf = (value) => {
     let v = value.replace(/\D/g, "").slice(0, 11);
     v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -223,35 +222,14 @@ const Score = () => {
           )}
         </AnimatePresence>
 
-        {/* ===== MODAL ===== */}
-        <AnimatePresence>
-          {showModal && (
-            <motion.div
-              className="modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className={`modal-content ${modalType}`}
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8 }}
-              >
-                <img src={logo} alt="Logo" className="modal-logo" />
-                <h3>{modalType === "success" ? "Sucesso!" : "Atenção"}</h3>
-                <p>{modalMessage}</p>
-                <motion.button
-                  className="modal-close"
-                  onClick={() => setShowModal(false)}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  OK
-                </motion.button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <NotificationModal
+          show={showModal}
+          type={modalType}      
+          mode="ok"            
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+
       </motion.div>
     </div>
   );

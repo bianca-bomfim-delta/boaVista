@@ -8,8 +8,8 @@ body, html {
   background: var(--white);
   padding: 40px 50px;
   border-radius: 12px;
-  box-shadow: var(--shadow-300);
-  max-width: 1000px;
+  box-shadow: var(--shadow-200);
+  max-width: 100%;
   margin: 50px auto;
   width: 100%;
   box-sizing: border-box;
@@ -17,7 +17,7 @@ body, html {
 }
 
 .edit-profile-container:hover {
-  box-shadow: var(--shadow-500);
+  box-shadow: var(--shadow-200);
 }
 
 .edit-profile-container h2 {
@@ -64,12 +64,12 @@ th {
 }
 
 td {
-  border-bottom: 1px solid #eaeaea;
-  color: #333;
+  border-bottom: 1px solid var(--adminPanel-border);
+  color: var(--text-1);
 }
 
 tr:nth-child(even) td {
-  background-color: #f9f9fb;
+  background-color: var(--adminPanel);
 }
 
 input,
@@ -77,7 +77,7 @@ select {
   width: 100%;
   padding: 10px 12px;
   border-radius: 6px;
-  border: 1px solid #ccd2e3;
+  border: 1px solid var(--adminPanel);
   font-size: 15px;
   box-sizing: border-box;
   color: #333;
@@ -89,7 +89,7 @@ input:focus,
 select:focus {
   border-color: var(--primary);
   outline: none;
-  box-shadow: var(--shadow-300);
+  box-shadow: var(--shadow-200);
 }
 
 .action-buttons {
@@ -114,7 +114,7 @@ select:focus {
 .btn-save:hover {
   background-color: var(--text-1);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-500);
+  box-shadow: var(--shadow-200);
 }
 
 .btn-delete {
@@ -129,7 +129,7 @@ select:focus {
 }
 
 .btn-delete:hover {
-  background-color: #dc26261a;
+  background-color: #888ca563;
 }
 
 
@@ -146,137 +146,20 @@ select:focus {
 }
 
 .admin-panel-wrapper {
-  width: calc(100% - 35px);
-  margin-left: 35px;
-  transition: margin-left 0.3s ease;
+  margin-left: 20px;
+  width: calc(100% - 20px); 
+  padding: 4rem;
+  box-sizing: border-box;
 }
 
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.modal-cancel,
-.modal-confirm {
-  border: none;
-  padding: 8px 18px;
-  border-radius: 6px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.modal-cancel {
-  background-color: var(--primary);
-  color: var(--white);
-}
-
-.modal-cancel:hover {
-  background-color: var(--primary-light);
-}
-
-.modal-confirm {
-  background-color: #0b1c3a;
-  color: var(--white);
-}
-
-.modal-confirm:hover {
-  background-color: #0b1c3a;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(4px);
-}
-
-.modal-content {
-  background: var(--white);
-  color: var(--text-1);
-  padding: 2rem 2.2rem;
-  border-radius: 16px;
-  box-shadow: var(--shadow-300);
-  text-align: center;
-  width: 300px;
-  height: 200px;
-  max-width: 90%;
-  position: relative;
-  animation: fadeIn 0.4s ease;
-}
-
-.modal-logo {
-  width: 60px;
-  margin: 2px auto 0px;
-}
-
-.modal-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.modal-text {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #475569;
-  line-height: 1.4;
-}
-
-.modal-content.success {
-  border-top: 5px solid #16a34a;
-}
-
-.modal-content.error {
-  border-top: 5px solid #dc2626;
-}
-
-.modal-close {
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1.4rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: var(--transition-300) ease-in-out;
-}
-
-.modal-close:hover {
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
-  transform: translateY(-2px);
-}
-
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@media (max-width: 1024px) {
+/* 1024px */
+@media (max-width: 1024px) { 
   .admin-panel-wrapper {
     padding: 1.5rem;
   }
 }
 
-@media (max-width: 768px) {
-  .admin-panel-wrapper {
-    padding: 1rem;
-  }
-}
-
+/* 992px */
 @media (max-width: 992px) {
   .edit-profile-container {
     padding: 30px 35px;
@@ -290,11 +173,15 @@ select:focus {
   th, td {
     font-size: 14px;
     padding: 10px 12px;
-    color: var(--text-4);
   }
 }
 
+/* 768px */
 @media (max-width: 768px) {
+  .admin-panel-wrapper {
+    padding: 1rem;
+  }
+
   .edit-profile-container {
     padding: 25px 20px;
   }
@@ -308,6 +195,7 @@ select:focus {
   }
 }
 
+/* 480px */
 @media (max-width: 480px) {
   .edit-profile-container h2 {
     font-size: 1.4rem;
@@ -327,3 +215,4 @@ select:focus {
     font-size: 1rem;
   }
 }
+
