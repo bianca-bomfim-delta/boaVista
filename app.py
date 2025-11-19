@@ -131,6 +131,7 @@ def register():
 # ----------------------
 # Fetch Score (CPF)
 # ----------------------
+
 @app.route("/fetch-score", methods=["POST"])
 def fetch_score():
     cpf = request.json.get("cpf", "").replace(".", "").replace("-", "")
@@ -147,97 +148,187 @@ def fetch_score():
 """
 
     url = "https://acerta.bvsnet.com.br/FamiliaAcertaPositivoPFXmlWeb/essencial/v4"
-    headers = {
-        "Content-Type": "application/xml",
-        "Accept": "application/xml"
+    headers = {"Content-Type": "application/xml", "Accept": "application/xml"}
+
+    ns = {
+        "ns": "http://boavistaservicos.com.br/familia/acerta/positivo/pf",
+        "tr_020": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/resumo_de_acoes_civeis",
+        "tr_021": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/relacao_de_acoes_civeis",
+        "tr_108": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/resumo_ocorrencias_de_debitos",
+        "tr_111": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/resumoConsultas_anteriores_90_dias",
+        "tr_123": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/informacoes_complementares",
+        "tr_124": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/debitos",
+        "tr_126": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/consultas_anteriores",
+        "tr_142": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/titulos_protestados",
+        "tr_146": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/resumo_titulos_protestados",
+        "tr_241": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/nome_documentos",
+        "tr_282": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/participacoes_do_documento_consultado",
+        "tr_295": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/relacao_falencia_recuperacao_judicial",
+        "tr_500": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/identificacao",
+        "tr_501": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/localizacao",
+        "tr_601": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/score_classificacao_varios_modelos",
+        "tr_700": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/nota_comportamento",
+        "tr_801": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/painel_controle_positivo/v4/essencial",
+        "tr_804": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/status_consumidor",
+        "tr_940": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/mensagem_registro"
     }
 
     try:
         response = requests.post(url, data=xml_body, headers=headers)
         response.raise_for_status()
         xml_response = response.text
-
-        ns = {
-            "ns": "http://boavistaservicos.com.br/familia/acerta/positivo/pf",
-            "tr_500": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/identificacao",
-            "tr_501": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/localizacao",
-            "tr_601": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/score_classificacao_varios_modelos",
-            "tr_804": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/status_consumidor",
-            "tr_700": "http://boavistaservicos.com.br/familia/acerta/positivo/pf/nota_comportamento"
-        }
-
         root = ET.fromstring(xml_response)
 
-        # Nome e CPF
-        nome_node = root.find(".//tr_500:nome", ns)
-        documento_node = root.find(".//tr_500:documento", ns)
-        nome = nome_node.text if nome_node is not None else None
-        cpf_ret = documento_node.text if documento_node is not None else None
+        # --------------------------------------------
+        # STATUS DO CONSUMIDOR
+        # --------------------------------------------
+        status_consumidor = root.findtext(".//tr_804:mensagem", None, ns)
 
-        # Mensagem
-        mensagem_node = root.find(".//tr_804:mensagem", ns)
-        mensagem = mensagem_node.text if mensagem_node is not None else None
+        # --------------------------------------------
+        # IDENTIFICAÇÃO
+        # --------------------------------------------
+        identificacao = {
+            "nome": root.findtext(".//tr_500:nome", None, ns),
+            "cpf": root.findtext(".//tr_500:documento", None, ns),
+            "nomeMae": root.findtext(".//tr_500:nomeMae", None, ns),
+            "dataNascimento": root.findtext(".//tr_500:dataNascimento", None, ns),
+            "situacaoReceita": root.findtext(".//tr_500:situacaoReceita", None, ns),
+            "sexo": root.findtext(".//tr_500:sexoConsultado", None, ns),
+            "estadoCivil": root.findtext(".//tr_500:estadoCivil", None, ns),
+            "dependentes": root.findtext(".//tr_500:numeroDependentes", None, ns),
+            "grauInstrucao": root.findtext(".//tr_500:grauInstrucao", None, ns),
+            "dataAtualizacao": root.findtext(".//tr_500:dataAtualizacao", None, ns),
+            "regiaoCpf": root.findtext(".//tr_500:regiaoCpf", None, ns)
+        }
 
-        # Scores (evitando duplicações)
-        scores_nodes = root.findall(".//tr_601:score", ns)
-        scores_seen = set()
+        # --------------------------------------------
+        # ENDEREÇO COMPLETO
+        # --------------------------------------------
+        endereco = {
+            "tipoLogradouro": root.findtext(".//tr_501:tipoLogradouro", None, ns),
+            "logradouro": root.findtext(".//tr_501:nomeLogradouro", None, ns),
+            "numero": root.findtext(".//tr_501:numeroLogradouro", None, ns),
+            "complemento": root.findtext(".//tr_501:complemento", None, ns),
+            "bairro": root.findtext(".//tr_501:bairro", None, ns),
+            "cidade": root.findtext(".//tr_501:cidade", None, ns),
+            "uf": root.findtext(".//tr_501:unidadeFederativa", None, ns),
+            "cep": root.findtext(".//tr_501:cep", None, ns)
+        }
+
+        # --------------------------------------------
+        # SCORES (todos os blocos)
+        # --------------------------------------------
         scores = []
-        for s in scores_nodes:
-            if s.text and s.text not in scores_seen:
-                scores.append({"score": int(s.text)})
-                scores_seen.add(s.text)
-        score_principal = scores[0]["score"] if scores else None
-
-        # Renda presumida
-        renda_presumida_node = root.find(".//tr_601:texto2", ns)
-        renda_presumida = renda_presumida_node.text if renda_presumida_node is not None else None
-
-        # Endereço (somente primeiro)
-        enderecos = []
-        for loc in root.findall(".//tr_501:localizacao", ns):
-            enderecos.append({
-                "logradouro": loc.findtext("tr_501:nomeLogradouro", default=None, namespaces=ns),
-                "bairro": loc.findtext("tr_501:bairro", default=None, namespaces=ns),
-                "cidade": loc.findtext("tr_501:cidade", default=None, namespaces=ns),
-                "cep": loc.findtext("tr_501:cep", default=None, namespaces=ns)
+        for s in root.findall(".//tr_601:score_classificacao_varios_modelos", ns):
+            scores.append({
+                "score": s.findtext("tr_601:score", None, ns),
+                "tipoScore": s.findtext("tr_601:tipoScore", None, ns),
+                "modeloScore": s.findtext("tr_601:modeloScore", None, ns),
+                "nomeScore": s.findtext("tr_601:nomeScore", None, ns),
+                "classificacao": s.findtext("tr_601:classificacaoAlfabetica", None, ns),
+                "probabilidade": s.findtext("tr_601:probabilidade", None, ns),
+                "natureza": s.findtext("tr_601:descricaoNatureza", None, ns),
+                "texto": s.findtext("tr_601:texto", None, ns),
+                "texto2": s.findtext("tr_601:texto2", None, ns)
             })
-        endereco_principal = enderecos[0] if enderecos else {}
 
-        # Comportamento contratos/faturas
-        contratos_recent_node = root.find(".//tr_700:nota_comportamento_contratos_recentes/tr_700:nota", ns)
-        contratos_recent = contratos_recent_node.text if contratos_recent_node is not None else None
+        # O primeiro score é o principal
+        score_principal = scores[0] if scores else None
 
-        faturas_atraso_node = root.find(".//tr_700:nota_comportamento_fatura_em_atraso/tr_700:nota", ns)
-        faturas_atraso = faturas_atraso_node.text if faturas_atraso_node is not None else None
+        # --------------------------------------------
+        # CONSULTAS ANTERIORES
+        # --------------------------------------------
+        consultas = []
+        for c in root.findall(".//tr_126:consultas_anteriores", ns):
+            consultas.append({
+                "data": c.findtext("tr_126:data", None, ns),
+                "tipoOcorrencia": c.findtext("tr_126:tipoOcorrencia", None, ns),
+                "valor": c.findtext("tr_126:valor", None, ns),
+                "informante": c.findtext("tr_126:informante", None, ns)
+            })
 
-        return jsonify({
-            "nome": nome,
-            "cpf": cpf_ret,
-            "mensagem": mensagem,
-            "score": score_principal,
-            "scores": scores,
-            "probabilidadeInadimplencia": None,
-            "rendaPresumida": renda_presumida,
-            "recomendacao": None,
-            "textoRecomendacao": None,
-            "pontualidadePagamentos": None,
-            "contratosRecentes": contratos_recent,
-            "faturasAtraso": faturas_atraso,
-            "logradouro": endereco_principal.get("logradouro"),
-            "bairro": endereco_principal.get("bairro"),
-            "cidade": endereco_principal.get("cidade"),
-            "cep": endereco_principal.get("cep"),
-            "enderecos": enderecos
-        })
+        # --------------------------------------------
+        # RESUMO CONSULTAS 90 DIAS (tr_111)
+        # --------------------------------------------
+        resumo_90d = {
+            "total": root.findtext(".//tr_111:total", None, ns),
+            "periodo": [
+                {
+                    "ano": root.findtext(".//tr_111:ano_1", None, ns),
+                    "mes": root.findtext(".//tr_111:mes_1", None, ns),
+                    "total": root.findtext(".//tr_111:total_1", None, ns)
+                },
+                {
+                    "ano": root.findtext(".//tr_111:ano_2", None, ns),
+                    "mes": root.findtext(".//tr_111:mes_2", None, ns),
+                    "total": root.findtext(".//tr_111:total_2", None, ns)
+                },
+                {
+                    "ano": root.findtext(".//tr_111:ano_3", None, ns),
+                    "mes": root.findtext(".//tr_111:mes_3", None, ns),
+                    "total": root.findtext(".//tr_111:total_3", None, ns)
+                },
+                {
+                    "ano": root.findtext(".//tr_111:ano_4", None, ns),
+                    "mes": root.findtext(".//tr_111:mes_4", None, ns),
+                    "total": root.findtext(".//tr_111:total_4", None, ns)
+                }
+            ]
+        }
 
-    except requests.exceptions.HTTPError as err:
-        return jsonify({
-            "erro": "A API retornou erro HTTP",
-            "status_code": response.status_code,
-            "detalhes": str(err)
-        }), 500
+        # --------------------------------------------
+        # PARTICIPAÇÕES EM EMPRESAS
+        # --------------------------------------------
+        participacoes = []
+        for p in root.findall(".//tr_282:participacoes_do_documento_consultado", ns):
+            participacoes.append({
+                "documentoA": p.findtext("tr_282:numeroDocumentoA", None, ns),
+                "documentoB": p.findtext("tr_282:numeroDocumentoB", None, ns),
+                "razaoSocial": p.findtext("tr_282:razaoSocial", None, ns),
+                "funcao": p.findtext("tr_282:funcao", None, ns),
+                "percentual": p.findtext("tr_282:valorEmPercentual", None, ns),
+                "dataEntrada": p.findtext("tr_282:dataDeEntrada", None, ns)
+            })
+
+        # --------------------------------------------
+        # INDICADORES POSITIVOS
+        # --------------------------------------------
+        comportamento = {
+            "faturaEmAtraso": root.findtext(".//tr_700:nota_comportamento_fatura_em_atraso/tr_700:nota", None, ns),
+            "contratosRecentes": root.findtext(".//tr_700:nota_comportamento_contratos_recentes/tr_700:nota", None, ns)
+        }
+
+        # --------------------------------------------
+        # REGISTROS NEGATIVOS (NADA CONSTA)
+        # --------------------------------------------
+        negativos = {
+            "acoesCiveis": root.findtext(".//tr_020:registro", "N", ns),
+            "debitos": root.findtext(".//tr_124:registro", "N", ns),
+            "titulosProtestados": root.findtext(".//tr_142:registro", "N", ns),
+            "falencias": root.findtext(".//tr_295:registro", "N", ns)
+        }
+
+        # --------------------------------------------
+        # JSON FINAL — IGUAL AO PDF
+        # --------------------------------------------
+        json_final = {
+            "statusConsumidor": status_consumidor,
+            "scoreAprovacaoPositivo": score_principal,
+            "identificacao": identificacao,
+            "endereco": endereco,
+            "consultasAnteriores": consultas,
+            "resumoConsultas90Dias": resumo_90d,
+            "participacoesEmpresas": participacoes,
+            "indicadoresPositivos": comportamento,
+            "registrosNegativos": negativos,
+            "todosScores": scores
+        }
+
+        return jsonify(json_final)
+
     except Exception as e:
-        return jsonify({"erro": "Falha ao processar XML", "detalhes": str(e)}), 500
+        return jsonify({"erro": str(e)}), 500
+
 
 @app.route("/fetch-score-cnpj", methods=["POST"])
 def fetch_score_cnpj():

@@ -1,0 +1,114 @@
+{
+    "consultasAnteriores": [
+        {
+            "data": "24/10/2025",
+            "informante": "TIM S A",
+            "tipoOcorrencia": "OU",
+            "valor": "0,00"
+        }
+    ],
+    "endereco": {
+        "bairro": "LAJEADO",
+        "cep": "08451210",
+        "cidade": "SÃO PAULO",
+        "complemento": "CASA",
+        "logradouro": "TESTE",
+        "numero": "185",
+        "tipoLogradouro": "TESTE",
+        "uf": "SP"
+    },
+    "identificacao": {
+        "cpf": "53295776830",
+        "dataAtualizacao": "05/08/2025",
+        "dataNascimento": "04/02/2007",
+        "dependentes": "0",
+        "estadoCivil": "0",
+        "grauInstrucao": "0",
+        "nome": "PEDRO ULRICH RAMOS HERINGER",
+        "nomeMae": "AMANDA SANTOS ALMEIRA FONSECA",
+        "regiaoCpf": "8",
+        "sexo": "1",
+        "situacaoReceita": "1"
+    },
+    "indicadoresPositivos": {
+        "contratosRecentes": "S",
+        "faturaEmAtraso": "N"
+    },
+    "participacoesEmpresas": [
+        {
+            "dataEntrada": "15/10/2025",
+            "documentoA": "00053295776830",
+            "documentoB": "63199009000193",
+            "funcao": "TITULAR",
+            "percentual": "100,00",
+            "razaoSocial": "63 199 009 PEDRO ULRICH RAMOS HERINGER"
+        }
+    ],
+    "registrosNegativos": {
+        "acoesCiveis": "N",
+        "debitos": "N",
+        "falencias": "N",
+        "titulosProtestados": "N"
+    },
+    "resumoConsultas90Dias": {
+        "periodo": [
+            {
+                "ano": "2025",
+                "mes": "11",
+                "total": "0000"
+            },
+            {
+                "ano": "2025",
+                "mes": "10",
+                "total": "0001"
+            },
+            {
+                "ano": "2025",
+                "mes": "09",
+                "total": "0000"
+            },
+            {
+                "ano": "2025",
+                "mes": "08",
+                "total": "0000"
+            }
+        ],
+        "total": "00001"
+    },
+    "scoreAprovacaoPositivo": {
+        "classificacao": "B",
+        "modeloScore": "1D",
+        "natureza": "POSITIVO PF",
+        "nomeScore": "P5",
+        "probabilidade": "00600",
+        "score": "469",
+        "texto": "É provável que 94% das pessoas com esse mesmo comportamento, paguem suas   contas nos próximos 6 meses.",
+        "texto2": "",
+        "tipoScore": "1"
+    },
+    "statusConsumidor": "CONSUMIDOR SEM HISTÓRICO DE CRÉDITO",
+    "todosScores": [
+        {
+            "classificacao": "B",
+            "modeloScore": "1D",
+            "natureza": "POSITIVO PF",
+            "nomeScore": "P5",
+            "probabilidade": "00600",
+            "score": "469",
+            "texto": "É provável que 94% das pessoas com esse mesmo comportamento, paguem suas   contas nos próximos 6 meses.",
+            "texto2": "",
+            "tipoScore": "1"
+        },
+        {
+            "classificacao": "",
+            "modeloScore": "1F",
+            "natureza": "RENDA PRESUMIDA POSITIVA",
+            "nomeScore": "RankRnd Positiva P5",
+            "probabilidade": "00000",
+            "score": "3",
+            "texto": "De R$ 1.401 até R$ 2.000",
+            "texto2": "Renda estimada a partir de informações comportamentais e cadastrais do consumidor.",
+            "tipoScore": "1"
+        }
+    ]
+}

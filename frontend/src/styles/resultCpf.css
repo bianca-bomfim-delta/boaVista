@@ -1,0 +1,99 @@
+.cpf-card {
+  background-color: var(--white);
+  border-radius: 12px;
+  padding: 35px 40px;
+  box-shadow: var(--shadow-200);
+  margin-top: 40px;
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+.cpf-card h2 {
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.gauge-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.recharts-wrapper {
+  overflow: visible;
+}
+
+.gauge-score {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.recharts-sector {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  transition: fill 0.3s ease;
+}
+
+.gauge-needle {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 2px;
+  height: 50px;
+  background: linear-gradient(to top, #333, #999);
+  transform-origin: bottom center;
+  transition: transform var(--transition-300) ease-in-out;
+}
+
+.gauge-center {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: #333;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+  box-shadow: var(--shadow-200);
+}
+
+.score-info {
+  text-align: left;
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.score-info p {
+  margin: 6px 0;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-size: 20px;
+  margin: 15px 0 8px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .cpf-card {
+    padding: 25px;
+  }
+
+  .gauge-score {
+    font-size: 1.8rem;
+    bottom: 25px;
+  }
+}
